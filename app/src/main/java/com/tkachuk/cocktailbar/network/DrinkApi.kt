@@ -1,7 +1,7 @@
 package com.tkachuk.cocktailbar.network
 
-import android.database.Observable
 import com.tkachuk.cocktailbar.model.Drink
+import io.reactivex.Observable
 import retrofit2.http.GET
 
 interface DrinkApi {
