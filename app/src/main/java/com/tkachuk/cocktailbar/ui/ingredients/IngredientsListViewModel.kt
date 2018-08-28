@@ -5,6 +5,8 @@ import android.util.Log
 import android.view.View
 import com.tkachuk.cocktailbar.R
 import com.tkachuk.cocktailbar.base.BaseViewModel
+import com.tkachuk.cocktailbar.model.Ingredient
+import com.tkachuk.cocktailbar.model.Ingredients
 import com.tkachuk.cocktailbar.network.DrinkApi
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -16,6 +18,8 @@ class IngredientsListViewModel : BaseViewModel() {
     lateinit var drinkApi: DrinkApi
 
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
+
+    val ingredientsListAdapter: IngredientsListAdapter = IngredientsListAdapter()
 
     private lateinit var subscription: Disposable
 
@@ -38,8 +42,9 @@ class IngredientsListViewModel : BaseViewModel() {
                 .doOnSubscribe { onRetrievePostListStart() }
                 .doOnTerminate { onRetrievePostListFinish() }
                 .subscribe(
-                        { onRetrievePostListSuccess() },
-                        { onRetrievePostListError() }
+                        // Add result
+                        { result ->  onRetrievePostListSuccess(result)},
+                        { msg -> onRetrievePostListError(msg.localizedMessage.toString()) }
                 )
     }
 
@@ -55,12 +60,14 @@ class IngredientsListViewModel : BaseViewModel() {
 
     }
 
-    private fun onRetrievePostListSuccess() {
+    private fun onRetrievePostListSuccess(result: Ingredients) {
+        ingredientsListAdapter.updateList(result.drinks)
         Log.d("draxvel", "success")
     }
 
-    private fun onRetrievePostListError() {
+    private fun onRetrievePostListError(msg: String) {
         errorMessage.value = R.string.loading_error
-        Log.d("draxvel", "error")
+        loadingVisibility.value = View.GONE
+        Log.d("draxvel", "error + "+msg)
     }
 }

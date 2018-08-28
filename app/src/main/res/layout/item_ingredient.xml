@@ -19,7 +19,6 @@
         android:background="@color/colorPrimary"
         android:textColor="@android:color/white"
         android:layout_margin="1dp"
-        android:padding="8dp"
         android:radius="20dp"
         app:mutableText="@{viewModel.getIngredientName()}" />
 

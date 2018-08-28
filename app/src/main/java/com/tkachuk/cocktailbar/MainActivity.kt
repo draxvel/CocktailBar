@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import com.tkachuk.cocktailbar.databinding.ActivityMainBinding
 import com.tkachuk.cocktailbar.ui.ingredients.IngredientsListViewModel
+import android.support.v7.widget.GridLayoutManager
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.ingredientsList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.ingredientsList.layoutManager = GridLayoutManager(this, 3)
 
         viewModel = ViewModelProviders.of(this).get(IngredientsListViewModel::class.java)
         viewModel.errorMessage.observe(this, Observer {
