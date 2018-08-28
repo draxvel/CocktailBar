@@ -9,15 +9,13 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class IngredientsListViewModel: BaseViewModel() {
-
+class IngredientsListViewModel : BaseViewModel() {
     @Inject
     lateinit var drinkApi: DrinkApi
 
-    private lateinit var subscription: Disposable
-
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
 
+    private lateinit var subscription: Disposable
 
     init {
         loadIngredients()
@@ -28,30 +26,29 @@ class IngredientsListViewModel: BaseViewModel() {
         subscription.dispose()
     }
 
-    private fun loadIngredients(){
+    private fun loadIngredients() {
         subscription = drinkApi.getIngredientsList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe{onRetrieveIngredientsListStart()}
-                .doOnSubscribe{onRetrieveIngredientsListFinish()}
-                .subscribe({onRetrieveIngredientsListSuccess()},
-                        {onRetrieveIngredientsListError()}
+                .doOnSubscribe { onRetrievePostListStart() }
+                .doOnTerminate { onRetrievePostListFinish() }
+                .subscribe(
+                        { onRetrievePostListSuccess() },
+                        { onRetrievePostListError() }
                 )
     }
 
-    private fun onRetrieveIngredientsListStart() {
+    private fun onRetrievePostListStart() {
         loadingVisibility.value = View.VISIBLE
     }
 
-    private fun onRetrieveIngredientsListFinish() {
+    private fun onRetrievePostListFinish() {
         loadingVisibility.value = View.GONE
     }
 
-    private fun onRetrieveIngredientsListSuccess() {
-
+    private fun onRetrievePostListSuccess() {
     }
 
-    private fun onRetrieveIngredientsListError() {
-
+    private fun onRetrievePostListError() {
     }
 }
