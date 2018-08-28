@@ -7,6 +7,11 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
+
+    dataBinding {
+        enabled = true
+    }
+
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.tkachuk.cocktailbar"
@@ -22,6 +27,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs = ['src/test/kotlin']
+        androidTest.java.srcDirs = ['src/androidTest/kotlin']
+    }
 }
 
 dependencies {
@@ -35,6 +45,7 @@ dependencies {
 
     // LiveData & ViewModel
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+    implementation "android.arch.lifecycle:viewmodel:$lifecycle_version"
 
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
@@ -55,4 +66,10 @@ dependencies {
 
     // Constraint Layout
     implementation "com.android.support.constraint:constraint-layout:1.1.2"
+
+    // Data binding
+    kapt "com.android.databinding:compiler:3.1.4"
+
+    // Support Design
+    implementation "com.android.support:design:$android_support_version"
 }
