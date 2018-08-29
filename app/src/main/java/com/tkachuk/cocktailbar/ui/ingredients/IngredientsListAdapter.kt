@@ -25,6 +25,10 @@ class IngredientsListAdapter : RecyclerView.Adapter<IngredientsListAdapter.ViewH
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         p0.bind(ingredientsList[p1])
+        p0.itemView.setOnClickListener {
+            //TODO show cocktails filtered by choosed ingredient OR show list of ingredients if choosed "SEE MORE"
+            //Toast.makeText(p0.itemView.context,ingredientsList[p1].strIngredient1, Toast.LENGTH_SHORT).show()
+        }
     }
 
     fun updateList(result: List<Ingredient>) {
@@ -35,6 +39,7 @@ class IngredientsListAdapter : RecyclerView.Adapter<IngredientsListAdapter.ViewH
     class ViewHolder(private val binding: ItemIngredientBinding) : RecyclerView.ViewHolder(binding.root) {
 
         private val viewModel = IngredientViewModel()
+        private val myContext = binding.root.context
 
         @Suppress("DEPRECATION")
         fun bind(ingredient: Ingredient) {
