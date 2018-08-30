@@ -76,13 +76,12 @@ class MainActivity : AppCompatActivity() {
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null && query != "") {
-                    //TODO search
+                    drinkListViewModel.searchCocktails(query)
                 }
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-
                 return false
             }
         })

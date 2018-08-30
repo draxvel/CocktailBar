@@ -51,6 +51,16 @@ class DrinkListViewModel : BaseViewModel() {
                 )
     }
 
+    fun searchCocktails(str: String){
+        subscription = drinkApi.searchCocktails(str)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { result -> onSearchDrinkSuccess(result)},
+                        { msg -> onSearchDrinkError(msg.localizedMessage.toString())}
+                )
+    }
+
     private fun onRetrieveDrinkStart() {
         loadingVisibility.value = View.VISIBLE
         errorMessage.value = null
@@ -84,5 +94,14 @@ class DrinkListViewModel : BaseViewModel() {
         errorMessage.value = R.string.loading_error
         loadingVisibility.value = View.GONE
         Log.d("draxvel drink", "error + " + msg)
+    }
+
+    private fun onSearchDrinkSuccess(result: Drinks) {
+        Log.d("draxvel search - ", result.toString())
+        drinkListAdapter.updateList(result.drinks)
+    }
+
+    private fun onSearchDrinkError(msg: String) {
+
     }
 }

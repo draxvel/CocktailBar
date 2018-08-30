@@ -35,6 +35,11 @@ class DrinkListAdapter : RecyclerView.Adapter<DrinkListAdapter.ViewHolder>() {
         notifyDataSetChanged()
     }
 
+    fun updateList(result: List<Drink>) {
+        drinkList = result
+        notifyDataSetChanged()
+    }
+
     class ViewHolder(private val binding: ItemDrinkBinding) : RecyclerView.ViewHolder(binding.root) {
         private val viewModel = DrinkViewModel()
 
