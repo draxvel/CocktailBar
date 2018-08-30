@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
-            name="viewModel"
+            name="ingredientsListViewModel"
             type="com.tkachuk.cocktailbar.ui.ingredients.IngredientsListViewModel" />
+
+        <variable
+            name="drinkListViewModel"
+            type="com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel" />
     </data>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <android.support.v7.widget.SearchView
-            android:id="@+id/search_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"></android.support.v7.widget.SearchView>
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -27,7 +25,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:mutableVisibility="@{viewModel.loadingVisibility}" />
+            app:mutableVisibility="@{ingredientsListViewModel.loadingVisibility}" />
+
+        <ProgressBar
+            android:id="@+id/progressBar2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:mutableVisibility="@{drinkListViewModel.loadingVisibility}" />
 
         <TextView
             android:id="@+id/textView"
@@ -35,17 +43,19 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="16dp"
             android:text="@string/choose_ingredient"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_view" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/ingredients_list"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginStart="4dp"
             android:layout_marginTop="4dp"
-            app:adapter="@{viewModel.ingredientsListAdapter}"
+            app:adapter="@{ingredientsListViewModel.ingredientsListAdapter}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -53,8 +63,31 @@
             android:id="@+id/ingredients_list2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:adapter="@{viewModel.ingredientsListAdapter2}"
+            android:layout_marginLeft="4dp"
+            android:layout_marginStart="4dp"
+            app:adapter="@{ingredientsListViewModel.ingredientsListAdapter2}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ingredients_list" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/choose_recipe"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ingredients_list2" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/drink_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:adapter="@{drinkListViewModel.drinkListAdapter}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textView2" />
+
     </android.support.constraint.ConstraintLayout>
 </layout>

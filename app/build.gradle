@@ -63,4 +63,6 @@ dependencies {
     kapt "com.android.databinding:compiler:3.1.4"
     // Support Design
     implementation "com.android.support:design:$android_support_version"
+    // Glide for downloading image
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
 }

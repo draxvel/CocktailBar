@@ -1,0 +1,37 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="drinkViewModel"
+            type="com.tkachuk.cocktailbar.ui.drinks.DrinkViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp">
+
+        <ImageView
+            android:id="@+id/flag"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/app_name"
+            app:mutableImage="@{drinkViewModel.getDrinkThumb()}" />
+
+        <!--android:scaleType="fitXY"-->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_rectangle_white"
+            android:padding="5dp"
+            app:mutableText="@{drinkViewModel.getDrinkName()}" />
+
+    </RelativeLayout>
+
+</layout>
