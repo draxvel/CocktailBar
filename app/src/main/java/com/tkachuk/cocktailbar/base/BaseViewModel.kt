@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModel
 import com.tkachuk.cocktailbar.injection.component.DaggerViewModelInjector
 import com.tkachuk.cocktailbar.injection.component.ViewModelInjector
 import com.tkachuk.cocktailbar.injection.module.NetworkModule
+import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
 import com.tkachuk.cocktailbar.ui.ingredients.IngredientsListViewModel
 
 abstract class BaseViewModel : ViewModel() {
@@ -22,6 +23,7 @@ abstract class BaseViewModel : ViewModel() {
     private fun inject() {
         when (this) {
             is IngredientsListViewModel -> injector.inject(this)
+            is DrinkListViewModel -> injector.inject(this)
         }
     }
 }
