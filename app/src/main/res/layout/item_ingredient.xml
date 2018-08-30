@@ -2,9 +2,8 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
-            name="viewModel"
+            name="ingredientViewModel"
             type="com.tkachuk.cocktailbar.ui.ingredients.IngredientViewModel" />
     </data>
 
@@ -20,7 +19,7 @@
             android:padding="5dp"
             android:singleLine="true"
             android:textColor="@android:color/white"
-            app:mutableText="@{viewModel.getIngredientName()}" />
+            app:mutableText="@{ingredientViewModel.getIngredientName()}" />
 
     </LinearLayout>
 </layout>
