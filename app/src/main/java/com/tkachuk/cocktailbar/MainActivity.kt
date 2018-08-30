@@ -8,7 +8,9 @@ import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.SearchView
 import android.util.Log
+import android.view.Menu
 import android.view.View
 import com.tkachuk.cocktailbar.databinding.ActivityMainBinding
 import com.tkachuk.cocktailbar.ui.InfiniteScrollListener
@@ -16,6 +18,8 @@ import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
 import com.tkachuk.cocktailbar.ui.ingredients.IngredientsListViewModel
 
 class MainActivity : AppCompatActivity() {
+
+    private var searchView: SearchView? = null
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var ingredientsListViewModel: IngredientsListViewModel
@@ -63,5 +67,30 @@ class MainActivity : AppCompatActivity() {
     private fun hideError() {
         Log.d("draxvel", "hideSnack")
         errorSnackbar?.dismiss()
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        searchView = menu?.findItem(R.id.search_item)?.actionView as SearchView
+
+        searchView?.setIconifiedByDefault(true)
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query != null && query != "") {
+                    //TODO search
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+
+                return false
+            }
+        })
+        return true
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
     }
 }

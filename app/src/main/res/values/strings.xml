@@ -5,4 +5,5 @@
     <string name="see_more">SEE MORE</string>
     <string name="choose_ingredient"><b>Choose ingredient for your cocktail: </b> </string>
     <string name="choose_recipe"><b>or choose recipe: </b> </string>
+    <string name="search">Search</string>
 </resources>
