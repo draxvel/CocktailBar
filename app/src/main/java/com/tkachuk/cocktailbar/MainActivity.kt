@@ -16,6 +16,7 @@ import com.tkachuk.cocktailbar.databinding.ActivityMainBinding
 import com.tkachuk.cocktailbar.ui.InfiniteScrollListener
 import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
 import com.tkachuk.cocktailbar.ui.ingredients.IngredientsListViewModel
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -52,10 +53,15 @@ class MainActivity : AppCompatActivity() {
 
         binding.drinkList.clearOnScrollListeners()
         binding.drinkList.addOnScrollListener(InfiniteScrollListener(
-                { drinkListViewModel.loadRandomDrink() },
+                { drinkListViewModel.loadRandomDrink(false) },
                 linearLayoutManager))
 
         binding.drinkListViewModel = drinkListViewModel
+
+        swipeRefreshLayout.setOnRefreshListener {
+            ingredientsListViewModel.loadIngredients()
+            drinkListViewModel.loadRandomDrink(true)
+        }
     }
 
     private fun showError(@StringRes errorMessage: Int, errorClickListener: View.OnClickListener) {
@@ -67,6 +73,7 @@ class MainActivity : AppCompatActivity() {
     private fun hideError() {
         Log.d("draxvel", "hideSnack")
         errorSnackbar?.dismiss()
+        swipeRefreshLayout.isRefreshing = false
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {

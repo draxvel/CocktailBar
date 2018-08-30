@@ -36,7 +36,7 @@ class IngredientsListViewModel : BaseViewModel() {
         subscription.dispose()
     }
 
-    private fun loadIngredients() {
+    fun loadIngredients() {
         subscription = drinkApi.getIngredientsList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

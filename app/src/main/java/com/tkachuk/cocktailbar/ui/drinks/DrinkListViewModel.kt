@@ -27,10 +27,10 @@ class DrinkListViewModel : BaseViewModel() {
     private lateinit var subscription: Disposable
 
     val errorMessage: MutableLiveData<Int> = MutableLiveData()
-    val errorClickListener = View.OnClickListener { loadRandomDrink() }
+    val errorClickListener = View.OnClickListener { loadRandomDrink(false) }
 
     init {
-        loadRandomDrink()
+        loadRandomDrink(false)
     }
 
     override fun onCleared() {
@@ -38,7 +38,7 @@ class DrinkListViewModel : BaseViewModel() {
         subscription.dispose()
     }
 
-    fun loadRandomDrink() {
+    fun loadRandomDrink(update: Boolean) {
         subscription = drinkApi.getRandom()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -46,7 +46,7 @@ class DrinkListViewModel : BaseViewModel() {
                 .doOnTerminate { onRetrieveDrinkFinish() }
                 .subscribe(
                         //Add result
-                        { result -> onRetrieveDrinkSuccess(result) },
+                        { result -> onRetrieveDrinkSuccess(result, update) },
                         { msg -> onRetrieveDrinkError(msg.localizedMessage.toString()) }
                 )
     }
@@ -72,22 +72,28 @@ class DrinkListViewModel : BaseViewModel() {
         Log.d("draxvel drink", "finish")
     }
 
-    private fun onRetrieveDrinkSuccess(result: Drinks) {
+    private fun onRetrieveDrinkSuccess(result: Drinks, update: Boolean) {
         Log.d("draxvel drink", "success")
+
         if (drinkList.size < 15) {
             if (drinkList.contains(result.drinks[0])) {
-                loadRandomDrink()
+                loadRandomDrink(update)
             } else {
                 Log.d("draxvel drink = ", result.drinks[0].toString())
                 drinkList.add(result.drinks[0])
             }
-            loadRandomDrink()
+            loadRandomDrink(update)
         } else {
-            drinkListAdapter.addToList(drinkList)
+            if(update){
+                drinkListAdapter.updateList(drinkList)
+                Log.d("draxvel", "update")
+            }else{
+                drinkListAdapter.addToList(drinkList)
+            }
             Log.d("draxvel drinkLIst = ", drinkList.toString())
 
             drinkList.clear()
-        }
+            }
     }
 
     private fun onRetrieveDrinkError(msg: String) {
