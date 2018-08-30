@@ -4,6 +4,7 @@ import com.tkachuk.cocktailbar.model.Drinks
 import com.tkachuk.cocktailbar.model.Ingredients
 import io.reactivex.Observable
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface DrinkApi {
 
@@ -12,4 +13,7 @@ interface DrinkApi {
 
     @GET("random.php")
     fun getRandom(): Observable<Drinks>
+
+    @GET("search.php")
+    fun searchCocktails (@Query("s") str: String): Observable<Drinks>
 }
