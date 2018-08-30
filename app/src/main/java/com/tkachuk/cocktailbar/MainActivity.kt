@@ -10,12 +10,15 @@ import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import com.tkachuk.cocktailbar.databinding.ActivityMainBinding
+import com.tkachuk.cocktailbar.ui.InfiniteScrollListener
+import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
 import com.tkachuk.cocktailbar.ui.ingredients.IngredientsListViewModel
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: IngredientsListViewModel
+    private lateinit var ingredientsListViewModel: IngredientsListViewModel
+    private lateinit var drinkListViewModel: DrinkListViewModel
 
     private var errorSnackbar: Snackbar? = null
 
@@ -26,17 +29,31 @@ class MainActivity : AppCompatActivity() {
         binding.ingredientsList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.ingredientsList2.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
-        viewModel = ViewModelProviders.of(this).get(IngredientsListViewModel::class.java)
-        viewModel.errorMessage.observe(this, Observer { errorMessage ->
+
+        val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.drinkList.layoutManager = linearLayoutManager
+        ingredientsListViewModel = ViewModelProviders.of(this).get(IngredientsListViewModel::class.java)
+
+        ingredientsListViewModel.errorMessage.observe(this, Observer { errorMessage ->
             if (errorMessage != null) showError(errorMessage) else hideError()
         })
 
-        binding.viewModel = viewModel
+        drinkListViewModel = ViewModelProviders.of(this).get(DrinkListViewModel::class.java)
+//        drinkListViewModel.errorMessage.observe(this, Observer { errorMessage ->
+//            if (errorMessage != null) showError(errorMessage) else hideError()
+//        })
+
+        binding.ingredientsListViewModel = ingredientsListViewModel
+        binding.drinkList.clearOnScrollListeners()
+        binding.drinkList.addOnScrollListener(InfiniteScrollListener(
+                { drinkListViewModel.loadRandomDrink() },
+                linearLayoutManager))
+        binding.drinkListViewModel = drinkListViewModel
     }
 
     private fun showError(@StringRes errorMessage: Int) {
         errorSnackbar = Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_INDEFINITE)
-        errorSnackbar?.setAction(R.string.retry, viewModel.errorClickListener)
+        errorSnackbar?.setAction(R.string.retry, ingredientsListViewModel.errorClickListener)
         errorSnackbar?.show()
     }
 

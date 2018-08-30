@@ -44,7 +44,7 @@ class IngredientsListAdapter : RecyclerView.Adapter<IngredientsListAdapter.ViewH
         @Suppress("DEPRECATION")
         fun bind(ingredient: Ingredient) {
             viewModel.bind(ingredient)
-            binding.viewModel = viewModel
+            binding.ingredientViewModel = viewModel
 
             if (ingredient.strIngredient1 == binding.root.context.resources.getString(R.string.see_more)) {
                 if (Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
