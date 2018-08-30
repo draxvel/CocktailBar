@@ -33,7 +33,7 @@ class InfiniteScrollListener(
                 }
             }
 
-            if (!loading && (totalItemCount - visibleItemCount)
+            if (!loading && (totalItemCount - visibleItemCount-3)
                     <= (firstVisibleItem + visibleThreshold)) {
                 Log.i("draxvel", "End reached")
                 func()
