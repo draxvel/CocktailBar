@@ -53,20 +53,22 @@ class MainActivity : AppCompatActivity() {
 
         binding.drinkList.clearOnScrollListeners()
         binding.drinkList.addOnScrollListener(InfiniteScrollListener(
-                { drinkListViewModel.loadRandomDrink(false) },
+                { drinkListViewModel.loadRandom10Drink(false) },
                 linearLayoutManager))
 
         binding.drinkListViewModel = drinkListViewModel
 
         swipeRefreshLayout.setOnRefreshListener {
             ingredientsListViewModel.loadIngredients()
-            drinkListViewModel.loadRandomDrink(true)
+            drinkListViewModel.loadRandom10Drink(true)
         }
     }
 
     private fun showError(@StringRes errorMessage: Int, errorClickListener: View.OnClickListener) {
         errorSnackbar = Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_INDEFINITE)
-        errorSnackbar?.setAction(R.string.retry, errorClickListener)
+        if(errorMessage != R.string.not_found) {
+            errorSnackbar?.setAction(R.string.retry, errorClickListener)
+        }
         errorSnackbar?.show()
     }
 
@@ -84,6 +86,7 @@ class MainActivity : AppCompatActivity() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null && query != "") {
                     drinkListViewModel.searchCocktails(query)
+                    binding.drinkList.smoothScrollToPosition(0)
                 }
                 return false
             }
