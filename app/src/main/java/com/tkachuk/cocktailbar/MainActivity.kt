@@ -60,7 +60,13 @@ class MainActivity : AppCompatActivity() {
 
         swipeRefreshLayout.setOnRefreshListener {
             ingredientsListViewModel.loadIngredients()
+            searchView?.isIconified = true
             drinkListViewModel.loadRandom10Drink(true)
+            binding.drinkList.clearOnScrollListeners()
+            binding.drinkList.addOnScrollListener(InfiniteScrollListener(
+                    { drinkListViewModel.loadRandom10Drink(false) },
+                    linearLayoutManager))
+            binding.drinkList.smoothScrollToPosition(0)
         }
     }
 
@@ -101,5 +107,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
+    }
+
+    override fun onBackPressed() {
+        if (searchView?.isIconified == false) {
+            searchView?.isIconified = true
+        } else {
+            super.onBackPressed()
+        }
     }
 }

@@ -49,7 +49,7 @@ class DrinkListViewModel : BaseViewModel() {
                 .subscribe(
                         //Add result
                         { result ->
-                            if(count < 10) {
+                            if(count < 5) {
                                 if (drinkList.contains(result.drinks[0])) {
                                     loadRandom10Drink(update)
                                 } else {
@@ -59,6 +59,7 @@ class DrinkListViewModel : BaseViewModel() {
                                 loadRandom10Drink(update)
                             }else {
                                 onRetrieveDrinkSuccess(update)
+                                count = 0
                             }
                         },
                         { msg -> onRetrieveDrinkError(msg.localizedMessage.toString()) }
@@ -72,10 +73,7 @@ class DrinkListViewModel : BaseViewModel() {
                 .doOnSubscribe { onRetrieveDrinkStart() }
                 .doOnTerminate { onRetrieveDrinkFinish() }
                 .subscribe(
-                        { result ->
-                            if(result==null) onSearchDrinkError() else
-                                onSearchDrinkSuccess(result)
-                           },
+                        { result ->  onSearchDrinkSuccess(result)},
                         {onSearchDrinkError()}
                 )
     }
@@ -129,6 +127,8 @@ class DrinkListViewModel : BaseViewModel() {
     private fun onSearchDrinkSuccess(result: Drinks) {
         Log.d("draxvel search - ", result.toString())
         drinkListAdapter.updateList(result.drinks)
+        drinkList = mutableListOf()
+        count = 0
     }
 
     private fun onSearchDrinkError() {
