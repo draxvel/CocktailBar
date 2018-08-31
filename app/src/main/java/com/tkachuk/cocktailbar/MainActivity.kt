@@ -16,6 +16,7 @@ import com.tkachuk.cocktailbar.databinding.ActivityMainBinding
 import com.tkachuk.cocktailbar.ui.InfiniteScrollListener
 import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
 import com.tkachuk.cocktailbar.ui.ingredients.IngredientsListViewModel
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -52,21 +53,35 @@ class MainActivity : AppCompatActivity() {
 
         binding.drinkList.clearOnScrollListeners()
         binding.drinkList.addOnScrollListener(InfiniteScrollListener(
-                { drinkListViewModel.loadRandomDrink() },
+                { drinkListViewModel.loadRandom10Drink(false) },
                 linearLayoutManager))
 
         binding.drinkListViewModel = drinkListViewModel
+
+        swipeRefreshLayout.setOnRefreshListener {
+            ingredientsListViewModel.loadIngredients()
+            searchView?.isIconified = true
+            drinkListViewModel.loadRandom10Drink(true)
+            binding.drinkList.clearOnScrollListeners()
+            binding.drinkList.addOnScrollListener(InfiniteScrollListener(
+                    { drinkListViewModel.loadRandom10Drink(false) },
+                    linearLayoutManager))
+            binding.drinkList.smoothScrollToPosition(0)
+        }
     }
 
     private fun showError(@StringRes errorMessage: Int, errorClickListener: View.OnClickListener) {
         errorSnackbar = Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_INDEFINITE)
-        errorSnackbar?.setAction(R.string.retry, errorClickListener)
+        if(errorMessage != R.string.not_found) {
+            errorSnackbar?.setAction(R.string.retry, errorClickListener)
+        }
         errorSnackbar?.show()
     }
 
     private fun hideError() {
         Log.d("draxvel", "hideSnack")
         errorSnackbar?.dismiss()
+        swipeRefreshLayout.isRefreshing = false
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
@@ -76,13 +91,13 @@ class MainActivity : AppCompatActivity() {
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null && query != "") {
-                    //TODO search
+                    drinkListViewModel.searchCocktails(query)
+                    binding.drinkList.smoothScrollToPosition(0)
                 }
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-
                 return false
             }
         })
@@ -92,5 +107,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
+    }
+
+    override fun onBackPressed() {
+        if (searchView?.isIconified == false) {
+            searchView?.isIconified = true
+        } else {
+            super.onBackPressed()
+        }
     }
 }
