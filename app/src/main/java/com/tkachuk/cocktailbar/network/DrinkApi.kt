@@ -15,5 +15,8 @@ interface DrinkApi {
     fun getRandom(): Observable<Drinks>
 
     @GET("search.php")
-    fun searchCocktails (@Query("s") str: String): Observable<Drinks>
+    fun searchCocktails(@Query("s") str: String): Observable<Drinks>
+
+    @GET("lookup.php")
+    fun getFullCocktailRecipe(@Query("i") id: Int): Observable<Drinks>
 }
