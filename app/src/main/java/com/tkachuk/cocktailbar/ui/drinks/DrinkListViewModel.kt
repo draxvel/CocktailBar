@@ -20,9 +20,10 @@ class DrinkListViewModel : BaseViewModel() {
 
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
 
-    val drinkListAdapter: DrinkListAdapter = DrinkListAdapter()
+    val drinkListAdapter: DrinkListAdapter = DrinkListAdapter(this)
 
     private var drinkList: MutableList<Drink> = mutableListOf()
+    var clickedDrinkId: MutableLiveData<Int> = MutableLiveData()
 
     private var count = 0
 

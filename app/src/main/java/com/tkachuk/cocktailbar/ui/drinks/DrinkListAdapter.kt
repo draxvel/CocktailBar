@@ -1,6 +1,5 @@
 package com.tkachuk.cocktailbar.ui.drinks
 
-import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -8,9 +7,8 @@ import android.view.ViewGroup
 import com.tkachuk.cocktailbar.R
 import com.tkachuk.cocktailbar.databinding.ItemDrinkBinding
 import com.tkachuk.cocktailbar.model.Drink
-import com.tkachuk.cocktailbar.ui.fulldrink.FullDrinkActivity
 
-class DrinkListAdapter : RecyclerView.Adapter<DrinkListAdapter.ViewHolder>() {
+class DrinkListAdapter(private val drinkListViewModel: DrinkListViewModel) : RecyclerView.Adapter<DrinkListAdapter.ViewHolder>() {
 
     private var drinkList: List<Drink> = listOf()
 
@@ -26,8 +24,8 @@ class DrinkListAdapter : RecyclerView.Adapter<DrinkListAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         p0.bind(drinkList[p1])
-        p0.itemView.setOnClickListener {
-            p0.showFullDrink()
+        p0.itemView.setOnClickListener { it ->
+            drinkListViewModel.clickedDrinkId.value = drinkList[p1].idDrink
         }
     }
 
@@ -43,15 +41,10 @@ class DrinkListAdapter : RecyclerView.Adapter<DrinkListAdapter.ViewHolder>() {
 
     class ViewHolder(private val binding: ItemDrinkBinding) : RecyclerView.ViewHolder(binding.root) {
         private val viewModel = DrinkViewModel()
-        private val context = binding.root.context
 
         fun bind(drink: Drink) {
             viewModel.bind(drink)
             binding.drinkViewModel = viewModel
-        }
-
-        fun showFullDrink(){
-            context.startActivity(Intent(context, FullDrinkActivity::class.java))
         }
     }
 }
