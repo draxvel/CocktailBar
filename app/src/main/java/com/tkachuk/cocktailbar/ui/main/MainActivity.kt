@@ -51,6 +51,14 @@ class MainActivity : AppCompatActivity() {
             if (errorMessage != null) showError(errorMessage, drinkListViewModel.errorClickListener) else hideError()
         })
 
+        drinkListViewModel.clickedDrinkId.observe(this, Observer {
+            clickedDrinkId ->
+            Log.d("draxvel", "clicked!")
+            val intent = Intent(this, FullDrinkActivity::class.java)
+            intent.putExtra("id", clickedDrinkId)
+            startActivity(intent)
+        })
+
         binding.ingredientsListViewModel = ingredientsListViewModel
 
         binding.drinkList.clearOnScrollListeners()

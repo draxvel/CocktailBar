@@ -2,6 +2,7 @@ package com.tkachuk.cocktailbar.injection.component
 
 import com.tkachuk.cocktailbar.injection.module.NetworkModule
 import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
+import com.tkachuk.cocktailbar.ui.fulldrink.FullDrinkViewModel
 import com.tkachuk.cocktailbar.ui.ingredients.IngredientsListViewModel
 import dagger.Component
 import javax.inject.Singleton
@@ -12,6 +13,7 @@ interface ViewModelInjector {
 
     fun inject(ingredientsListViewModel: IngredientsListViewModel)
     fun inject(drinkListViewModel: DrinkListViewModel)
+    fun inject(fullDrinkViewModel: FullDrinkViewModel)
 
     @Component.Builder
     interface Builder {
