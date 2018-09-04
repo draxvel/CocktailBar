@@ -17,10 +17,11 @@ class FullDrinkViewModel: BaseViewModel() {
     @Inject
     lateinit var drinkApi: DrinkApi
     private lateinit var subscription: Disposable
+    val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
 
     private var id: Int = 0
-    private val errorMessage: MutableLiveData<Int> = MutableLiveData()
-    private val errorClickListener = View.OnClickListener {loadRecipe(id)}
+    val errorMessage: MutableLiveData<Int> = MutableLiveData()
+    val errorClickListener = View.OnClickListener {loadRecipe(id)}
 
     private val drinkName = MutableLiveData<String>()
     private val drinkThumb = MutableLiveData<String>()
@@ -79,27 +80,19 @@ class FullDrinkViewModel: BaseViewModel() {
     }
 
     private fun onRetrieveRecipeSuccess(drinks: List<Drink>) {
-        Log.d("draxvel", drinks[0].strDrink)
-       bind(drinks[0])
+        bind(drinks[0])
     }
 
     private fun onRetrieveRecipeError(msg: String) {
         errorMessage.value = R.string.loading_error
         setVisible(false)
-        Log.d("draxvel drink", "error + " + msg)
-    }
-    //TODO binding view + showing data in this fragment
-
-    private fun onSearchDrinkError() {
-        errorMessage.value = R.string.not_found
-        setVisible(false)
     }
 
     private fun setVisible(visible: Boolean) {
         if (visible) {
-            //loadingVisibility.value = View.VISIBLE
+            loadingVisibility.value = View.VISIBLE
         } else {
-            //loadingVisibility.value = View.GONE
+            loadingVisibility.value = View.GONE
         }
     }
 }
