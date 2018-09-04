@@ -37,6 +37,11 @@ class FullDrinkActivity: AppCompatActivity() {
             if (errorMessage != null) showError(errorMessage, fullDrinkViewModel.errorClickListener)
                 else hideError()
         })
+
+        fullDrinkViewModel.drinkName.observe(this, Observer { title ->
+            supportActionBar?.title = title
+        })
+        supportActionBar?.setHomeButtonEnabled(true)
     }
 
     private fun showError(@StringRes errorMessage: Int, errorClickListener: View.OnClickListener) {

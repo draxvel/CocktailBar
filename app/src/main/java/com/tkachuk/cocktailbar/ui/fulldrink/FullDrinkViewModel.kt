@@ -23,29 +23,23 @@ class FullDrinkViewModel: BaseViewModel() {
     val errorMessage: MutableLiveData<Int> = MutableLiveData()
     val errorClickListener = View.OnClickListener {loadRecipe(id)}
 
-    private val drinkName = MutableLiveData<String>()
-    private val drinkThumb = MutableLiveData<String>()
+    //val title = MutableLiveData<String>()
+    val drinkName = MutableLiveData<String>()
+    val drinkThumb = MutableLiveData<String>()
 
-    private val strCategory = MutableLiveData<String>()
-    private val strAlcoholic = MutableLiveData<String>()
-    private val strGlass = MutableLiveData<String>()
-    private val strInstructions = MutableLiveData<String>()
+    val strCategory = MutableLiveData<String>()
+    val strAlcoholic = MutableLiveData<String>()
+    val strGlass = MutableLiveData<String>()
+    val strInstructions = MutableLiveData<String>()
 
     fun bind(drink: Drink) {
         drinkName.value = drink.strDrink
+        //title.value = drinkName.toString()
         drinkThumb.value = drink.strDrinkThumb
         strCategory.value = drink.strCategory
         strAlcoholic.value = drink.strAlcoholic
         strGlass.value = drink.strGlass
         strInstructions.value = drink.strInstructions
-    }
-
-    fun getDrinkName(): MutableLiveData<String> {
-        return drinkName
-    }
-
-    fun getDrinkThumb(): MutableLiveData<String> {
-        return drinkThumb
     }
 
     override fun onCleared() {
