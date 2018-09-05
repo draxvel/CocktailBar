@@ -7,4 +7,6 @@
     <string name="choose_recipe"><b>or choose recipe: </b> </string>
     <string name="search">Search</string>
     <string name="not_found">Not found</string>
+    <string name="what_you_need">What you need:</string>
+    <string name="instruction">Instruction:</string>
 </resources>

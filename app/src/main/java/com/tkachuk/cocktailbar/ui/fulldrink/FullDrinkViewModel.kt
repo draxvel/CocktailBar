@@ -28,7 +28,7 @@ class FullDrinkViewModel: BaseViewModel() {
     val drinkName = MutableLiveData<String>()
     val drinkThumb = MutableLiveData<String>()
 
-    val strCategory = MutableLiveData<String>()
+    val strCategory =MutableLiveData<String>()
     val strAlcoholic = MutableLiveData<String>()
     val strGlass = MutableLiveData<String>()
     val strInstructions = MutableLiveData<String>()
@@ -36,9 +36,9 @@ class FullDrinkViewModel: BaseViewModel() {
     fun bind(drink: Drink) {
         drinkName.value = drink.strDrink
         drinkThumb.value = drink.strDrinkThumb
-        strCategory.value = drink.strCategory
-        strAlcoholic.value = drink.strAlcoholic
-        strGlass.value = drink.strGlass
+        strCategory.value =  "Category: "+drink.strCategory
+        strAlcoholic.value = "Alcoholic: "+drink.strAlcoholic
+        strGlass.value = "Glass: "+drink.strGlass
         strInstructions.value = drink.strInstructions
 
         val tempList: MutableList<Ingredient> = mutableListOf()
