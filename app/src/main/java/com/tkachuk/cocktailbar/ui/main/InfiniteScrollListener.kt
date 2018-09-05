@@ -1,4 +1,4 @@
-package com.tkachuk.cocktailbar.ui
+package com.tkachuk.cocktailbar.ui.main
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -33,7 +33,7 @@ class InfiniteScrollListener(
                 }
             }
 
-            if (!loading && (totalItemCount - visibleItemCount-3)
+            if (!loading && (totalItemCount - visibleItemCount - 3)
                     <= (firstVisibleItem + visibleThreshold)) {
                 Log.i("draxvel", "End reached")
                 func()

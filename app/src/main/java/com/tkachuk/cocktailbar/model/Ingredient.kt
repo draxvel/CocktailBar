@@ -1,3 +1,3 @@
 package com.tkachuk.cocktailbar.model
 
-data class Ingredient(val strIngredient1: String)
+data class Ingredient(var strIngredient1: String, var strMeasure1: String = "")

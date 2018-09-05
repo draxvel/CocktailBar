@@ -1,7 +1,8 @@
-package com.tkachuk.cocktailbar
+package com.tkachuk.cocktailbar.ui.main
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -9,12 +10,12 @@ import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
-import android.util.Log
 import android.view.Menu
 import android.view.View
+import com.tkachuk.cocktailbar.R
 import com.tkachuk.cocktailbar.databinding.ActivityMainBinding
-import com.tkachuk.cocktailbar.ui.InfiniteScrollListener
 import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
+import com.tkachuk.cocktailbar.ui.fulldrink.FullDrinkActivity
 import com.tkachuk.cocktailbar.ui.ingredients.IngredientsListViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -49,6 +50,12 @@ class MainActivity : AppCompatActivity() {
             if (errorMessage != null) showError(errorMessage, drinkListViewModel.errorClickListener) else hideError()
         })
 
+        drinkListViewModel.clickedDrinkId.observe(this, Observer { clickedDrinkId ->
+            val intent = Intent(this, FullDrinkActivity::class.java)
+            intent.putExtra("id", clickedDrinkId)
+            startActivity(intent)
+        })
+
         binding.ingredientsListViewModel = ingredientsListViewModel
 
         binding.drinkList.clearOnScrollListeners()
@@ -72,14 +79,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun showError(@StringRes errorMessage: Int, errorClickListener: View.OnClickListener) {
         errorSnackbar = Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_INDEFINITE)
-        if(errorMessage != R.string.not_found) {
+        if (errorMessage != R.string.not_found) {
             errorSnackbar?.setAction(R.string.retry, errorClickListener)
         }
         errorSnackbar?.show()
     }
 
     private fun hideError() {
-        Log.d("draxvel", "hideSnack")
         errorSnackbar?.dismiss()
         swipeRefreshLayout.isRefreshing = false
     }

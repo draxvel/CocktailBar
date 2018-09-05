@@ -20,9 +20,10 @@ class DrinkListViewModel : BaseViewModel() {
 
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
 
-    val drinkListAdapter: DrinkListAdapter = DrinkListAdapter()
+    val drinkListAdapter: DrinkListAdapter = DrinkListAdapter(this)
 
     private var drinkList: MutableList<Drink> = mutableListOf()
+    var clickedDrinkId: MutableLiveData<Int> = MutableLiveData()
 
     private var count = 0
 
@@ -49,7 +50,7 @@ class DrinkListViewModel : BaseViewModel() {
                 .subscribe(
                         //Add result
                         { result ->
-                            if(count < 5) {
+                            if (count < 5) {
                                 if (drinkList.contains(result.drinks[0])) {
                                     loadRandom10Drink(update)
                                 } else {
@@ -57,7 +58,7 @@ class DrinkListViewModel : BaseViewModel() {
                                     count++
                                 }
                                 loadRandom10Drink(update)
-                            }else {
+                            } else {
                                 onRetrieveDrinkSuccess(update)
                                 count = 0
                             }
@@ -66,15 +67,15 @@ class DrinkListViewModel : BaseViewModel() {
                 )
     }
 
-    fun searchCocktails(str: String){
+    fun searchCocktails(str: String) {
         subscription = drinkApi.searchCocktails(str)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { onRetrieveDrinkStart() }
                 .doOnTerminate { onRetrieveDrinkFinish() }
                 .subscribe(
-                        { result ->  onSearchDrinkSuccess(result)},
-                        {onSearchDrinkError()}
+                        { result -> onSearchDrinkSuccess(result) },
+                        { onSearchDrinkError() }
                 )
     }
 
@@ -88,9 +89,9 @@ class DrinkListViewModel : BaseViewModel() {
     }
 
     private fun onRetrieveDrinkSuccess(update: Boolean) {
-        if(update){
+        if (update) {
             drinkListAdapter.updateList(drinkList)
-        }else{
+        } else {
             drinkListAdapter.addToList(drinkList)
         }
         drinkList = mutableListOf()
@@ -107,7 +108,7 @@ class DrinkListViewModel : BaseViewModel() {
                 drinkList.add(result.drinks[0])
             }
             loadRandom10Drink(update)
-        }else {
+        } else {
 
             if (update) {
                 drinkListAdapter.updateList(drinkList)
@@ -136,10 +137,10 @@ class DrinkListViewModel : BaseViewModel() {
         setVisible(false)
     }
 
-    private fun setVisible(visible: Boolean){
-        if(visible){
+    private fun setVisible(visible: Boolean) {
+        if (visible) {
             loadingVisibility.value = View.VISIBLE
-        }else{
+        } else {
             loadingVisibility.value = View.GONE
         }
     }

@@ -6,11 +6,11 @@ import com.tkachuk.cocktailbar.model.Ingredient
 class IngredientViewModel {
     private val ingredientName = MutableLiveData<String>()
 
-    fun bind(ingredient: Ingredient){
+    fun bind(ingredient: Ingredient) {
         ingredientName.value = ingredient.strIngredient1
     }
 
-    fun getIngredientName(): MutableLiveData<String>{
+    fun getIngredientName(): MutableLiveData<String> {
         return ingredientName
     }
 }
