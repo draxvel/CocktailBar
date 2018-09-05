@@ -9,13 +9,11 @@ import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
-import android.view.View
 import com.tkachuk.cocktailbar.databinding.ActivityFullDrinkBinding
 
-class FullDrinkActivity: AppCompatActivity() {
+class FullDrinkActivity : AppCompatActivity() {
 
-    val binding: ActivityFullDrinkBinding by lazy{
+    val binding: ActivityFullDrinkBinding by lazy {
         DataBindingUtil.setContentView<ActivityFullDrinkBinding>(this, R.layout.activity_full_drink)
     }
 
@@ -24,7 +22,6 @@ class FullDrinkActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("draxvel", "onCreate")
 
         fullDrinkViewModel = ViewModelProviders.of(this).get(FullDrinkViewModel::class.java)
 
@@ -35,7 +32,7 @@ class FullDrinkActivity: AppCompatActivity() {
 
         fullDrinkViewModel.errorMessage.observe(this, Observer { errorMessage ->
             if (errorMessage != null) showError(errorMessage)
-                else hideError()
+            else hideError()
         })
 
         fullDrinkViewModel.drinkName.observe(this, Observer { title ->

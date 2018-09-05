@@ -14,21 +14,20 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class FullDrinkViewModel: BaseViewModel() {
+class FullDrinkViewModel : BaseViewModel() {
 
     @Inject
     lateinit var drinkApi: DrinkApi
     private lateinit var subscription: Disposable
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
 
-    private var id: Int = 0
     val errorMessage: MutableLiveData<Int> = MutableLiveData()
     val ingredientPhotoListAdapter = IngredientPhotoListAdapter()
 
     val drinkName = MutableLiveData<String>()
     val drinkThumb = MutableLiveData<String>()
 
-    val strCategory =MutableLiveData<String>()
+    val strCategory = MutableLiveData<String>()
     val strAlcoholic = MutableLiveData<String>()
     val strGlass = MutableLiveData<String>()
     val strInstructions = MutableLiveData<String>()
@@ -36,9 +35,9 @@ class FullDrinkViewModel: BaseViewModel() {
     fun bind(drink: Drink) {
         drinkName.value = drink.strDrink
         drinkThumb.value = drink.strDrinkThumb
-        strCategory.value =  "Category: "+drink.strCategory
-        strAlcoholic.value = "Alcoholic: "+drink.strAlcoholic
-        strGlass.value = "Glass: "+drink.strGlass
+        strCategory.value = "Category: " + drink.strCategory
+        strAlcoholic.value = "Alcoholic: " + drink.strAlcoholic
+        strGlass.value = "Glass: " + drink.strGlass
         strInstructions.value = drink.strInstructions
 
         val tempList: MutableList<Ingredient> = mutableListOf()
@@ -46,27 +45,26 @@ class FullDrinkViewModel: BaseViewModel() {
         val fields = drink.javaClass.declaredFields
 
         var count = 0
-        for(f in fields) {
+        for (f in fields) {
             f.isAccessible = true
-            if (f.name.startsWith("strIngredient") && f.get(drink)!=null) {
-                    val str: String = f.get(drink) as String
-                    if(str!="")
-                    {
-                        val ingredient = Ingredient(str)
-                        tempList.add(ingredient)
-                        count++
-                    }
+            if (f.name.startsWith("strIngredient") && f.get(drink) != null) {
+                val str: String = f.get(drink) as String
+                if (str != "") {
+                    val ingredient = Ingredient(str)
+                    tempList.add(ingredient)
+                    count++
+                }
             }
         }
 
         var i = 0
-        for(f in fields) {
-            if(f.name.startsWith("strMeasure") && f.get(drink)!=null){
-                    val str: String = f.get(drink) as String
-                    if(str!="" && str!=" " &&i<count) {
-                        tempList[i].strMeasure1 = str
-                        i++
-                    }
+        for (f in fields) {
+            if (f.name.startsWith("strMeasure") && f.get(drink) != null) {
+                val str: String = f.get(drink) as String
+                if (str != "" && str != " " && i < count) {
+                    tempList[i].strMeasure1 = str
+                    i++
+                }
             }
         }
 
@@ -86,9 +84,10 @@ class FullDrinkViewModel: BaseViewModel() {
                 .doOnTerminate { onRetrieveRecipeStop() }
                 .subscribe(
                         //Add result
-                        { result -> onRetrieveRecipeSuccess (result.drinks)
+                        { result ->
+                            onRetrieveRecipeSuccess(result.drinks)
                         },
-                        { msg -> onRetrieveRecipeError (msg) }
+                        { msg -> onRetrieveRecipeError(msg) }
                 )
     }
 
@@ -112,7 +111,7 @@ class FullDrinkViewModel: BaseViewModel() {
         Log.d("draxvel", "onRetrieveRecipeError")
         errorMessage.value = R.string.loading_error
         setVisible(false)
-        Log.d("draxvel", "msg: "+ msg.localizedMessage.toString())
+        Log.d("draxvel", "msg: " + msg.localizedMessage.toString())
     }
 
     private fun setVisible(visible: Boolean) {

@@ -10,7 +10,7 @@ import com.tkachuk.cocktailbar.databinding.ItemIngredientPhotoBinding
 import com.tkachuk.cocktailbar.model.Ingredient
 import kotlinx.android.synthetic.main.item_ingredient_photo.view.*
 
-class IngredientPhotoListAdapter: RecyclerView.Adapter<IngredientPhotoListAdapter.ViewHolder>() {
+class IngredientPhotoListAdapter : RecyclerView.Adapter<IngredientPhotoListAdapter.ViewHolder>() {
 
     private var photoIngredientList: List<Ingredient> = listOf()
 
@@ -20,7 +20,7 @@ class IngredientPhotoListAdapter: RecyclerView.Adapter<IngredientPhotoListAdapte
         return ViewHolder(binding)
     }
 
-    fun setList(list: MutableList<Ingredient>){
+    fun setList(list: MutableList<Ingredient>) {
         photoIngredientList = list.toList()
         notifyDataSetChanged()
     }
@@ -36,17 +36,17 @@ class IngredientPhotoListAdapter: RecyclerView.Adapter<IngredientPhotoListAdapte
         }
     }
 
-    class ViewHolder(private val binding: ItemIngredientPhotoBinding): RecyclerView.ViewHolder(binding.root){
+    class ViewHolder(private val binding: ItemIngredientPhotoBinding) : RecyclerView.ViewHolder(binding.root) {
         private val viewModel = IngredientPhotoViewModel()
         private val textViewMeasure = binding.root.textViewMeasure
 
-        fun bind(ingredient: Ingredient){
-                viewModel.bind(ingredient)
-                binding.ingredientPhotoViewModel = viewModel
+        fun bind(ingredient: Ingredient) {
+            viewModel.bind(ingredient)
+            binding.ingredientPhotoViewModel = viewModel
         }
 
-        fun setVisibilityTextViewMeasure(){
-            if(textViewMeasure.visibility == View.GONE) textViewMeasure.visibility = View.VISIBLE
+        fun setVisibilityTextViewMeasure() {
+            if (textViewMeasure.visibility == View.GONE) textViewMeasure.visibility = View.VISIBLE
             else textViewMeasure.visibility = View.GONE
         }
     }

@@ -10,7 +10,6 @@ import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
-import android.util.Log
 import android.view.Menu
 import android.view.View
 import com.tkachuk.cocktailbar.R
@@ -51,9 +50,7 @@ class MainActivity : AppCompatActivity() {
             if (errorMessage != null) showError(errorMessage, drinkListViewModel.errorClickListener) else hideError()
         })
 
-        drinkListViewModel.clickedDrinkId.observe(this, Observer {
-            clickedDrinkId ->
-            Log.d("draxvel", "clicked!")
+        drinkListViewModel.clickedDrinkId.observe(this, Observer { clickedDrinkId ->
             val intent = Intent(this, FullDrinkActivity::class.java)
             intent.putExtra("id", clickedDrinkId)
             startActivity(intent)
@@ -82,14 +79,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun showError(@StringRes errorMessage: Int, errorClickListener: View.OnClickListener) {
         errorSnackbar = Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_INDEFINITE)
-        if(errorMessage != R.string.not_found) {
+        if (errorMessage != R.string.not_found) {
             errorSnackbar?.setAction(R.string.retry, errorClickListener)
         }
         errorSnackbar?.show()
     }
 
     private fun hideError() {
-        Log.d("draxvel", "hideSnack")
         errorSnackbar?.dismiss()
         swipeRefreshLayout.isRefreshing = false
     }

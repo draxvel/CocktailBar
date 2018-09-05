@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="ingredientPhotoViewModel"
             type="com.tkachuk.cocktailbar.ui.fulldrink.ingredients.IngredientPhotoViewModel" />
     </data>
 
     <android.support.constraint.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="3dp">
@@ -24,11 +24,11 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:padding="5dp"
-            android:src="@drawable/hc9b1a1521853096"
-            app:mutableImage="@{ingredientPhotoViewModel.ingredientPhoto}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:mutableImage="@{ingredientPhotoViewModel.ingredientPhoto}"
+            android:contentDescription="@string/app_name" />
 
         <TextView
             android:id="@+id/textView"
@@ -36,7 +36,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="test"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView" />
