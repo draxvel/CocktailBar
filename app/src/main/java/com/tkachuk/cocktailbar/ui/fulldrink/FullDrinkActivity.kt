@@ -8,6 +8,7 @@ import com.tkachuk.cocktailbar.R
 import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
 import com.tkachuk.cocktailbar.databinding.ActivityFullDrinkBinding
@@ -19,7 +20,6 @@ class FullDrinkActivity: AppCompatActivity() {
     }
 
     private lateinit var fullDrinkViewModel: FullDrinkViewModel
-
     private var errorSnackbar: Snackbar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +34,7 @@ class FullDrinkActivity: AppCompatActivity() {
         binding.fullDrinkViewModel = fullDrinkViewModel
 
         fullDrinkViewModel.errorMessage.observe(this, Observer { errorMessage ->
-            if (errorMessage != null) showError(errorMessage, fullDrinkViewModel.errorClickListener)
+            if (errorMessage != null) showError(errorMessage)
                 else hideError()
         })
 
@@ -42,9 +42,11 @@ class FullDrinkActivity: AppCompatActivity() {
             supportActionBar?.title = title
         })
         supportActionBar?.setHomeButtonEnabled(true)
+
+        binding.recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
     }
 
-    private fun showError(@StringRes errorMessage: Int, errorClickListener: View.OnClickListener) {
+    private fun showError(@StringRes errorMessage: Int) {
         errorSnackbar = Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_INDEFINITE)
         errorSnackbar?.show()
     }

@@ -4,6 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.databinding.BindingAdapter
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
@@ -19,9 +20,9 @@ fun setMutableVisibility(view: View, visibility: MutableLiveData<Int>?) {
             value ->
             if(value == View.VISIBLE){
                 parentActivity.window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
             }else{
-                parentActivity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                parentActivity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
             }
             view.visibility = value ?: View.VISIBLE })
     }
@@ -40,10 +41,12 @@ fun setMutableImage(view: ImageView, url: MutableLiveData<String>?) {
     val parentActivity = view.getParentActivity()
     if (parentActivity != null && url != null) {
         url.observe(parentActivity, Observer { value ->
+            Log.d("draxvel", "value - "+value)
+            view.visibility = View.VISIBLE
             Glide.with(parentActivity)
                     .load(value)
                     .into(view)
-        })
+            })
     }
 }
 

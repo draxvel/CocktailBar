@@ -6,7 +6,6 @@
         <variable
             name="fullDrinkViewModel"
             type="com.tkachuk.cocktailbar.ui.fulldrink.FullDrinkViewModel" />
-
         <import type="android.view.View" />
 
     </data>
@@ -16,7 +15,6 @@
         android:layout_height="match_parent">
 
         <ProgressBar
-            android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -39,13 +37,12 @@
             app:layout_constraintHorizontal_bias="0.647"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:mutableImage="@{fullDrinkViewModel.drinkThumb}"
-            tools:src="@drawable/hc9b1a1521853096" />
+            app:mutableImage="@{fullDrinkViewModel.drinkThumb}"/>
 
         <!--android:scaleType="fitXY"-->
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -53,26 +50,25 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="fdsfsssssssssssssss"
+            app:mutableText="@{fullDrinkViewModel.strInstructions}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+            app:layout_constraintTop_toBottomOf="@+id/image" />
 
 
-        <!--<android.support.v7.widget.RecyclerView-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="0dp"-->
-            <!--android:layout_marginBottom="8dp"-->
-            <!--android:layout_marginEnd="8dp"-->
-            <!--android:layout_marginLeft="8dp"-->
-            <!--android:layout_marginRight="8dp"-->
-            <!--android:layout_marginStart="8dp"-->
-            <!--app:layout_constraintBottom_toBottomOf="parent"-->
-            <!--app:layout_constraintEnd_toEndOf="parent"-->
-            <!--app:layout_constraintStart_toStartOf="parent"-->
-            <!--app:layout_constraintTop_toBottomOf="@+id/textView5">-->
-
-        <!--</android.support.v7.widget.RecyclerView>-->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            app:adapter="@{fullDrinkViewModel.ingredientPhotoListAdapter}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView"/>
     </android.support.constraint.ConstraintLayout>
-
 </layout>
