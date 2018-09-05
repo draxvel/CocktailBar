@@ -43,24 +43,34 @@ class FullDrinkViewModel: BaseViewModel() {
 
         val tempList: MutableList<Ingredient> = mutableListOf()
 
-        if(drink.strIngredient1!=null && drink.strIngredient1.isNotEmpty()) tempList.add(Ingredient(drink.strIngredient1))
-        if(drink.strIngredient2!=null && drink.strIngredient2.isNotEmpty())  tempList.add(Ingredient(drink.strIngredient2))
-        if(drink.strIngredient3!=null && drink.strIngredient3.isNotEmpty())  tempList.add(Ingredient(drink.strIngredient3))
-        if(drink.strIngredient4!=null && drink.strIngredient4.isNotEmpty())  tempList.add(Ingredient(drink.strIngredient4))
-        if(drink.strIngredient5!=null && drink.strIngredient5.isNotEmpty())  tempList.add(Ingredient(drink.strIngredient5))
-        if(drink.strIngredient6!=null && drink.strIngredient6.isNotEmpty())  tempList.add(Ingredient(drink.strIngredient6))
-        if(drink.strIngredient7!=null && drink.strIngredient7.isNotEmpty())  tempList.add(Ingredient(drink.strIngredient7))
-        if(drink.strIngredient8!=null && drink.strIngredient8.isNotEmpty())  tempList.add(Ingredient(drink.strIngredient8))
-        if(drink.strIngredient9!=null && drink.strIngredient9.isNotEmpty())  tempList.add(Ingredient(drink.strIngredient9))
-        if(drink.strIngredient10!=null && drink.strIngredient10.isNotEmpty())  tempList.add(Ingredient(drink.strIngredient10))
-        if(drink.strIngredient11!=null && drink.strIngredient11.isNotEmpty())  tempList.add(Ingredient(drink.strIngredient11))
-        if(drink.strIngredient12!=null && drink.strIngredient12.isNotEmpty())  tempList.add(Ingredient(drink.strIngredient12))
-        if(drink.strIngredient13!=null && drink.strIngredient13.isNotEmpty())  tempList.add(Ingredient(drink.strIngredient13))
-        if(drink.strIngredient14!=null && drink.strIngredient14.isNotEmpty())  tempList.add(Ingredient(drink.strIngredient14))
-        if(drink.strIngredient15!=null && drink.strIngredient15.isNotEmpty())  tempList.add(Ingredient(drink.strIngredient15))
+        val fields = drink.javaClass.declaredFields
+
+        var count = 0
+        for(f in fields) {
+            f.isAccessible = true
+            if (f.name.startsWith("strIngredient") && f.get(drink)!=null) {
+                    val str: String = f.get(drink) as String
+                    if(str!="")
+                    {
+                        val ingredient = Ingredient(str)
+                        tempList.add(ingredient)
+                        count++
+                    }
+            }
+        }
+
+        var i = 0
+        for(f in fields) {
+            if(f.name.startsWith("strMeasure") && f.get(drink)!=null){
+                    val str: String = f.get(drink) as String
+                    if(str!="" && str!=" " &&i<count) {
+                        tempList[i].strMeasure1 = str
+                        i++
+                    }
+            }
+        }
 
         ingredientPhotoListAdapter.setList(tempList)
-        Log.d("draxvel", "list - "+tempList.toString())
     }
 
     override fun onCleared() {
@@ -69,8 +79,6 @@ class FullDrinkViewModel: BaseViewModel() {
     }
 
     fun loadRecipe(id: Int) {
-        Log.d("draxvel", "loadRecipe"+id)
-
         subscription = drinkApi.getFullCocktailRecipe(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -78,10 +86,9 @@ class FullDrinkViewModel: BaseViewModel() {
                 .doOnTerminate { onRetrieveRecipeStop() }
                 .subscribe(
                         //Add result
-                        { result ->
-                            onRetrieveRecipeSuccess (result.drinks)
+                        { result -> onRetrieveRecipeSuccess (result.drinks)
                         },
-                        { msg -> onRetrieveRecipeError () }
+                        { msg -> onRetrieveRecipeError (msg) }
                 )
     }
 
@@ -101,10 +108,11 @@ class FullDrinkViewModel: BaseViewModel() {
         bind(drinks[0])
     }
 
-    private fun onRetrieveRecipeError() {
+    private fun onRetrieveRecipeError(msg: Throwable) {
         Log.d("draxvel", "onRetrieveRecipeError")
         errorMessage.value = R.string.loading_error
         setVisible(false)
+        Log.d("draxvel", "msg: "+ msg.localizedMessage.toString())
     }
 
     private fun setVisible(visible: Boolean) {
