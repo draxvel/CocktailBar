@@ -17,6 +17,7 @@ import com.tkachuk.cocktailbar.databinding.ActivityMainBinding
 import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
 import com.tkachuk.cocktailbar.ui.fulldrink.FullDrinkActivity
 import com.tkachuk.cocktailbar.ui.ingredients.IngredientsListViewModel
+import com.tkachuk.cocktailbar.ui.searchbyingredient.SearchByIngredientActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -53,6 +54,12 @@ class MainActivity : AppCompatActivity() {
         drinkListViewModel.clickedDrinkId.observe(this, Observer { clickedDrinkId ->
             val intent = Intent(this, FullDrinkActivity::class.java)
             intent.putExtra("id", clickedDrinkId)
+            startActivity(intent)
+        })
+
+        ingredientsListViewModel.clickedIngredientName.observe(this, Observer { clickedIngredientName ->
+            val intent = Intent(this, SearchByIngredientActivity::class.java)
+            intent.putExtra("name", clickedIngredientName)
             startActivity(intent)
         })
 
