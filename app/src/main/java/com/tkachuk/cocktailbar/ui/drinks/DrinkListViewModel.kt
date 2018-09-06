@@ -27,18 +27,14 @@ class DrinkListViewModel : BaseViewModel() {
 
     private var count = 0
 
-    private lateinit var subscription: Disposable
+    private var subscription: Disposable? = null
 
     val errorMessage: MutableLiveData<Int> = MutableLiveData()
     val errorClickListener = View.OnClickListener { loadRandom10Drink(false) }
 
-    init {
-        loadRandom10Drink(false)
-    }
-
     override fun onCleared() {
         super.onCleared()
-        subscription.dispose()
+        subscription?.dispose()
     }
 
     fun loadRandom10Drink(update: Boolean) {
@@ -69,6 +65,18 @@ class DrinkListViewModel : BaseViewModel() {
 
     fun searchCocktails(str: String) {
         subscription = drinkApi.searchCocktails(str)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { onRetrieveDrinkStart() }
+                .doOnTerminate { onRetrieveDrinkFinish() }
+                .subscribe(
+                        { result -> onSearchDrinkSuccess(result) },
+                        { onSearchDrinkError() }
+                )
+    }
+
+    fun searchByIngredient(str: String) {
+        subscription = drinkApi.searchByIngredient(str)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { onRetrieveDrinkStart() }
@@ -137,7 +145,7 @@ class DrinkListViewModel : BaseViewModel() {
         setVisible(false)
     }
 
-    private fun setVisible(visible: Boolean) {
+    fun setVisible(visible: Boolean) {
         if (visible) {
             loadingVisibility.value = View.VISIBLE
         } else {
