@@ -63,7 +63,7 @@ class IngredientsListViewModel : BaseViewModel() {
     private fun onRetrievePostListSuccess(result: Ingredients) {
         ingredientsListAdapter.updateList(getRandomIngredients(result))
         val tempList = getRandomIngredients(result, 3).toMutableList()
-        tempList.add(Ingredient("SEE MORE"))
+        tempList.add(Ingredient("SEARCH MORE"))
         ingredientsListAdapter2.updateList(tempList)
     }
 

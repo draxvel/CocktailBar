@@ -45,7 +45,7 @@ class IngredientsListAdapter(private val ingredientsListViewModel: IngredientsLi
             viewModel.bind(ingredient)
             binding.ingredientViewModel = viewModel
 
-            if (ingredient.strIngredient1 == binding.root.context.resources.getString(R.string.see_more)) {
+            if (ingredient.strIngredient1 == binding.root.context.resources.getString(R.string.search_more)) {
                 if (Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
                     itemView.setBackgroundDrawable(binding.root.context.resources.getDrawable(R.drawable.shape_rectangle_accent))
                 } else {
