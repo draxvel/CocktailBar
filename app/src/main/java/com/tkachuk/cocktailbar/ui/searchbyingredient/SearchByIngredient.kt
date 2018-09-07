@@ -18,6 +18,7 @@ import com.tkachuk.cocktailbar.databinding.ActivitySearchByIngredientBinding
 import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
 import com.tkachuk.cocktailbar.ui.fulldrink.FullDrinkActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_search_by_ingredient.*
 
 class SearchByIngredientActivity : AppCompatActivity() {
 
