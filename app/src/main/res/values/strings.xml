@@ -2,11 +2,14 @@
     <string name="app_name">CocktailBar</string>
     <string name="retry">Retry</string>
     <string name="loading_error">An error occurred while loading</string>
-    <string name="see_more">SEE MORE</string>
+    <string name="search_more">SEARCH MORE</string>
     <string name="choose_ingredient"><b>Choose ingredient for your cocktail: </b> </string>
     <string name="choose_recipe"><b>or choose recipe: </b> </string>
     <string name="search">Search</string>
     <string name="not_found">Not found</string>
     <string name="what_you_need">What you need:</string>
     <string name="instruction">Instruction:</string>
+    <string name="search_by_ingredient">Search by ingredient</string>
+    <string name="Search_list_is_empty">Search list is empty</string>
+    <string name="clear">Clear</string>
 </resources>

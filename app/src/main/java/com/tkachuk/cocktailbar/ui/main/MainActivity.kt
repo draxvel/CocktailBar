@@ -10,6 +10,7 @@ import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
+import android.util.Log
 import android.view.Menu
 import android.view.View
 import com.tkachuk.cocktailbar.R
@@ -17,6 +18,7 @@ import com.tkachuk.cocktailbar.databinding.ActivityMainBinding
 import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
 import com.tkachuk.cocktailbar.ui.fulldrink.FullDrinkActivity
 import com.tkachuk.cocktailbar.ui.ingredients.IngredientsListViewModel
+import com.tkachuk.cocktailbar.ui.searchbyingredient.SearchByIngredientActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -46,13 +48,23 @@ class MainActivity : AppCompatActivity() {
         })
 
         drinkListViewModel = ViewModelProviders.of(this).get(DrinkListViewModel::class.java)
+        drinkListViewModel.loadRandom10Drink(false)
         drinkListViewModel.errorMessage.observe(this, Observer { errorMessage ->
             if (errorMessage != null) showError(errorMessage, drinkListViewModel.errorClickListener) else hideError()
         })
 
         drinkListViewModel.clickedDrinkId.observe(this, Observer { clickedDrinkId ->
+            Log.d("draxvel", "observe click")
             val intent = Intent(this, FullDrinkActivity::class.java)
             intent.putExtra("id", clickedDrinkId)
+            startActivity(intent)
+        })
+
+        ingredientsListViewModel.clickedIngredientName.observe(this, Observer { clickedIngredientName ->
+            val intent = Intent(this, SearchByIngredientActivity::class.java)
+            if (!clickedIngredientName.equals(getString(R.string.search_more))) {
+                intent.putExtra("name", clickedIngredientName)
+            }
             startActivity(intent)
         })
 
