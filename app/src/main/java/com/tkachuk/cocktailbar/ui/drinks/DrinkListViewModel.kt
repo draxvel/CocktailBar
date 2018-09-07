@@ -149,7 +149,7 @@ class DrinkListViewModel : BaseViewModel() {
         setVisible(false)
     }
 
-    private fun setVisible(visible: Boolean) {
+    fun setVisible(visible: Boolean) {
         if (visible) {
             loadingVisibility.value = View.VISIBLE
         } else {
