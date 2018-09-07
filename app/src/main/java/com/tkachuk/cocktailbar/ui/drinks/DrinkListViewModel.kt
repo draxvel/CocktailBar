@@ -45,8 +45,8 @@ class DrinkListViewModel : BaseViewModel() {
         subscription = drinkApi.getRandom()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { onRetrieveDrinkStart() }
-                .doOnTerminate { onRetrieveDrinkFinish() }
+                .doOnSubscribe { onRetrieveStart() }
+                .doOnTerminate { onRetrieveFinish() }
                 .subscribe(
                         //Add result
                         { result ->
@@ -71,20 +71,20 @@ class DrinkListViewModel : BaseViewModel() {
         subscription = drinkApi.searchCocktails(str)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { onRetrieveDrinkStart() }
-                .doOnTerminate { onRetrieveDrinkFinish() }
+                .doOnSubscribe { onRetrieveStart() }
+                .doOnTerminate { onRetrieveFinish() }
                 .subscribe(
                         { result -> onSearchDrinkSuccess(result) },
                         { onSearchDrinkError() }
                 )
     }
 
-    private fun onRetrieveDrinkStart() {
+    private fun onRetrieveStart() {
         setVisible(true)
         errorMessage.value = null
     }
 
-    private fun onRetrieveDrinkFinish() {
+    private fun onRetrieveFinish() {
         setVisible(false)
     }
 
@@ -143,5 +143,21 @@ class DrinkListViewModel : BaseViewModel() {
         } else {
             loadingVisibility.value = View.GONE
         }
+    }
+
+    fun loadFilteredDrinks(s: String){
+        subscription = drinkApi.getFilteredList(s)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { onRetrieveStart() }
+                .doOnTerminate { onRetrieveFinish() }
+                .subscribe(
+                        { result -> onFilteredDrinkSuccess(result) },
+                        { msg -> onRetrieveDrinkError(msg.localizedMessage) }
+                )
+    }
+
+    private fun onFilteredDrinkSuccess(result: Drinks) {
+        drinkListAdapter.updateList(result.drinks)
     }
 }

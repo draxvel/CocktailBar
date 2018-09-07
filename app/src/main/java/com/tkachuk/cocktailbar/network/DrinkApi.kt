@@ -24,4 +24,8 @@ interface DrinkApi {
     //List of categories
     @GET("list.php?c=list")
     fun getCategoriesList(): Observable<Categories>
+
+    //Filter by Category
+    @GET("filter.php")
+    fun getFilteredList(@Query("c") str:String): Observable<Drinks>
 }
