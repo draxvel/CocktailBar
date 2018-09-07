@@ -20,13 +20,22 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.fulldrink.FullDrinkActivity"
-            android:parentActivityName = ".ui.fulldrink.FullDrinkActivity"
+            android:parentActivityName = ".ui.main.MainActivity"
             tools:ignore="UnusedAttribute">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.fulldrink.FullDrinkActivity" />
+                android:value=".ui.main.MainActivity" />
         </activity>
+
+        <activity android:name=".ui.searchbyingredient.SearchByIngredientActivity"
+        android:parentActivityName = ".ui.main.MainActivity"
+        tools:ignore="UnusedAttribute">
+        <!-- Parent activity meta-data to support 4.0 and lower -->
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".ui.main.MainActivity" />
+    </activity>
     </application>
 
 </manifest>

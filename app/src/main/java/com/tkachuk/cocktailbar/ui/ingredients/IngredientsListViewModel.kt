@@ -19,8 +19,10 @@ class IngredientsListViewModel : BaseViewModel() {
 
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
 
-    val ingredientsListAdapter: IngredientsListAdapter = IngredientsListAdapter()
-    val ingredientsListAdapter2: IngredientsListAdapter = IngredientsListAdapter()
+    val ingredientsListAdapter: IngredientsListAdapter = IngredientsListAdapter(this)
+    val ingredientsListAdapter2: IngredientsListAdapter = IngredientsListAdapter(this)
+
+    var clickedIngredientName: MutableLiveData<String> = MutableLiveData()
 
     private lateinit var subscription: Disposable
 
@@ -45,7 +47,7 @@ class IngredientsListViewModel : BaseViewModel() {
                 .subscribe(
                         // Add result
                         { result -> onRetrievePostListSuccess(result) },
-                        { msg -> onRetrievePostListError(msg.localizedMessage.toString()) }
+                        { msg -> onRetrievePostListError() }
                 )
     }
 
@@ -61,11 +63,11 @@ class IngredientsListViewModel : BaseViewModel() {
     private fun onRetrievePostListSuccess(result: Ingredients) {
         ingredientsListAdapter.updateList(getRandomIngredients(result))
         val tempList = getRandomIngredients(result, 3).toMutableList()
-        tempList.add(Ingredient("SEE MORE"))
+        tempList.add(Ingredient("SEARCH MORE"))
         ingredientsListAdapter2.updateList(tempList)
     }
 
-    private fun onRetrievePostListError(msg: String) {
+    private fun onRetrievePostListError() {
         errorMessage.value = R.string.loading_error
         loadingVisibility.value = View.GONE
     }

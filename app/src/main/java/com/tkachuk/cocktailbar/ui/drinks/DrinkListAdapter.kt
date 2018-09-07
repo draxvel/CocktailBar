@@ -39,6 +39,12 @@ class DrinkListAdapter(private val drinkListViewModel: DrinkListViewModel) : Rec
         notifyDataSetChanged()
     }
 
+    fun clear() {
+        val list: List<Drink> = listOf()
+        drinkList = list
+        notifyDataSetChanged()
+    }
+
     class ViewHolder(private val binding: ItemDrinkBinding) : RecyclerView.ViewHolder(binding.root) {
         private val viewModel = DrinkViewModel()
 

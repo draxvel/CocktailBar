@@ -79,6 +79,18 @@ class DrinkListViewModel : BaseViewModel() {
                 )
     }
 
+    fun searchByIngredient(str: String) {
+        subscription = drinkApi.searchByIngredient(str)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { onRetrieveStart() }
+                .doOnTerminate { onRetrieveFinish() }
+                .subscribe(
+                        { result -> onSearchDrinkSuccess(result) },
+                        { onSearchDrinkError() }
+                )
+    }
+
     private fun onRetrieveStart() {
         setVisible(true)
         errorMessage.value = null
