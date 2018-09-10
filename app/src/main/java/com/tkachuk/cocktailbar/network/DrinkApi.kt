@@ -1,5 +1,6 @@
 package com.tkachuk.cocktailbar.network
 
+import com.tkachuk.cocktailbar.model.Categories
 import com.tkachuk.cocktailbar.model.Drinks
 import com.tkachuk.cocktailbar.model.Ingredients
 import io.reactivex.Observable
@@ -27,4 +28,12 @@ interface DrinkApi {
     //Lookup full cocktail details by id
     @GET("lookup.php")
     fun getFullCocktailRecipe(@Query("i") id: Int): Observable<Drinks>
+
+    //List of categories
+    @GET("list.php?c=list")
+    fun getCategoriesList(): Observable<Categories>
+
+    //Filter by Category
+    @GET("filter.php")
+    fun getFilteredList(@Query("c") str:String): Observable<Drinks>
 }

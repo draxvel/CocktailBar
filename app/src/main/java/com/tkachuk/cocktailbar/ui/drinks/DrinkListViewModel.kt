@@ -27,22 +27,26 @@ class DrinkListViewModel : BaseViewModel() {
 
     private var count = 0
 
-    private var subscription: Disposable? = null
+    private lateinit var subscription: Disposable
 
     val errorMessage: MutableLiveData<Int> = MutableLiveData()
     val errorClickListener = View.OnClickListener { loadRandom10Drink(false) }
 
+    init {
+        loadRandom10Drink(false)
+    }
+
     override fun onCleared() {
         super.onCleared()
-        subscription?.dispose()
+        subscription.dispose()
     }
 
     fun loadRandom10Drink(update: Boolean) {
         subscription = drinkApi.getRandom()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { onRetrieveDrinkStart() }
-                .doOnTerminate { onRetrieveDrinkFinish() }
+                .doOnSubscribe { onRetrieveStart() }
+                .doOnTerminate { onRetrieveFinish() }
                 .subscribe(
                         //Add result
                         { result ->
@@ -67,8 +71,8 @@ class DrinkListViewModel : BaseViewModel() {
         subscription = drinkApi.searchCocktails(str)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { onRetrieveDrinkStart() }
-                .doOnTerminate { onRetrieveDrinkFinish() }
+                .doOnSubscribe { onRetrieveStart() }
+                .doOnTerminate { onRetrieveFinish() }
                 .subscribe(
                         { result -> onSearchDrinkSuccess(result) },
                         { onSearchDrinkError() }
@@ -79,20 +83,20 @@ class DrinkListViewModel : BaseViewModel() {
         subscription = drinkApi.searchByIngredient(str)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { onRetrieveDrinkStart() }
-                .doOnTerminate { onRetrieveDrinkFinish() }
+                .doOnSubscribe { onRetrieveStart() }
+                .doOnTerminate { onRetrieveFinish() }
                 .subscribe(
                         { result -> onSearchDrinkSuccess(result) },
                         { onSearchDrinkError() }
                 )
     }
 
-    private fun onRetrieveDrinkStart() {
+    private fun onRetrieveStart() {
         setVisible(true)
         errorMessage.value = null
     }
 
-    private fun onRetrieveDrinkFinish() {
+    private fun onRetrieveFinish() {
         setVisible(false)
     }
 
@@ -151,5 +155,21 @@ class DrinkListViewModel : BaseViewModel() {
         } else {
             loadingVisibility.value = View.GONE
         }
+    }
+
+    fun loadFilteredDrinks(s: String) {
+        subscription = drinkApi.getFilteredList(s)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { onRetrieveStart() }
+                .doOnTerminate { onRetrieveFinish() }
+                .subscribe(
+                        { result -> onFilteredDrinkSuccess(result) },
+                        { msg -> onRetrieveDrinkError(msg.localizedMessage) }
+                )
+    }
+
+    private fun onFilteredDrinkSuccess(result: Drinks) {
+        drinkListAdapter.updateList(result.drinks)
     }
 }

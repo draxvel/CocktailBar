@@ -20,7 +20,6 @@ class IngredientsListViewModel : BaseViewModel() {
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
 
     val ingredientsListAdapter: IngredientsListAdapter = IngredientsListAdapter(this)
-    val ingredientsListAdapter2: IngredientsListAdapter = IngredientsListAdapter(this)
 
     var clickedIngredientName: MutableLiveData<String> = MutableLiveData()
 
@@ -61,10 +60,10 @@ class IngredientsListViewModel : BaseViewModel() {
     }
 
     private fun onRetrievePostListSuccess(result: Ingredients) {
-        ingredientsListAdapter.updateList(getRandomIngredients(result))
-        val tempList = getRandomIngredients(result, 3).toMutableList()
+//        ingredientsListAdapter.updateList(getRandomIngredients(result))
+        val tempList = getRandomIngredients(result, 5).toMutableList()
         tempList.add(Ingredient("SEARCH MORE"))
-        ingredientsListAdapter2.updateList(tempList)
+        ingredientsListAdapter.updateList(tempList)
     }
 
     private fun onRetrievePostListError() {
