@@ -14,9 +14,10 @@
         android:orientation="horizontal">
 
         <android.support.v7.widget.RecyclerView
-            app:adapter="@{categoryListViewModel.categoryListAdapter}"
+            android:id="@+id/categories_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            app:adapter="@{categoryListViewModel.categoryListAdapter}">
         </android.support.v7.widget.RecyclerView>
     </LinearLayout>
 </layout>

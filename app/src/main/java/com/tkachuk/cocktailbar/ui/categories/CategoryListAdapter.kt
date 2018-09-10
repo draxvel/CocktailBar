@@ -7,18 +7,22 @@ import android.view.ViewGroup
 import com.tkachuk.cocktailbar.R
 import com.tkachuk.cocktailbar.databinding.ItemCategoryBinding
 import com.tkachuk.cocktailbar.model.Category
+import com.tkachuk.cocktailbar.ui.categories.drinks.FilteredDrinksFragment
+import com.tkachuk.cocktailbar.ui.main.IMainActivity
+import android.os.Bundle
 
-class CategoryListAdapter(): RecyclerView.Adapter<CategoryListAdapter.ViewHolder>(){
+class CategoryListAdapter(private val iMainActivity: IMainActivity) : RecyclerView.Adapter<CategoryListAdapter.ViewHolder>() {
 
     private var categoryList: List<Category> = listOf()
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
+        iMainActivity.setTitleSupportActionBar("")
         val binding: ItemCategoryBinding = DataBindingUtil.inflate(LayoutInflater.from(p0.context),
                 R.layout.item_category, p0, false)
         return ViewHolder(binding)
     }
 
-    fun setList(list: List<Category>){
+    fun setList(list: List<Category>) {
         categoryList = list
         notifyDataSetChanged()
     }
@@ -30,14 +34,19 @@ class CategoryListAdapter(): RecyclerView.Adapter<CategoryListAdapter.ViewHolder
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         p0.bind(categoryList[p1])
         p0.itemView.setOnClickListener {
-            //TODO open new fragment which contains a list of drinks filtered by category
+            val filteredDrinksFragment = FilteredDrinksFragment()
+            val bundle = Bundle()
+            bundle.putString("category", categoryList[p1].strCategory)
+            filteredDrinksFragment.arguments = bundle
+            iMainActivity.replaceFragment(filteredDrinksFragment, true)
+            iMainActivity.setTitleSupportActionBar(categoryList[p1].strCategory)
         }
     }
 
-    class ViewHolder(private val binding: ItemCategoryBinding): RecyclerView.ViewHolder(binding.root){
+    class ViewHolder(private val binding: ItemCategoryBinding) : RecyclerView.ViewHolder(binding.root) {
         private val viewModel = CategoryViewModel()
 
-        fun bind(category: Category){
+        fun bind(category: Category) {
             viewModel.bind(category)
             binding.categoryViewModel = viewModel
         }

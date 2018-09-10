@@ -1,3 +1,3 @@
 package com.tkachuk.cocktailbar.model
 
-data class Categories(val categories: List<Category>)
+data class Categories(val drinks: List<Category>)

@@ -1,19 +1,19 @@
 package com.tkachuk.cocktailbar.ui.categories
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.tkachuk.cocktailbar.R
 import com.tkachuk.cocktailbar.databinding.FragmentCategoryBinding
 
-class CategoryFragment: Fragment() {
+class CategoryFragment : Fragment() {
 
     private lateinit var root: View
     private lateinit var binding: FragmentCategoryBinding
@@ -24,15 +24,15 @@ class CategoryFragment: Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_category, container, false)
         root = binding.root
 
-        categoryListViewModel = ViewModelProviders.of(this).get(CategoryListViewModel::class.java)
+        categoryListViewModel = CategoryListViewModel(activity!!)
+        binding.categoriesList.layoutManager = GridLayoutManager(activity, 2);
+        categoryListViewModel.loadCategories()
 
         categoryListViewModel.errorMessage.observe(this, Observer { errorMessage ->
             if (errorMessage != null) showError(errorMessage, categoryListViewModel.errorClickListener) else hideError()
         })
 
-        categoryListViewModel = binding.categoryListViewModel!!
-
-        categoryListViewModel.loadCategories()
+        binding.categoryListViewModel = categoryListViewModel
 
         return root
     }
@@ -47,5 +47,10 @@ class CategoryFragment: Fragment() {
 
     private fun hideError() {
         errorSnackBar?.dismiss()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        hideError()
     }
 }

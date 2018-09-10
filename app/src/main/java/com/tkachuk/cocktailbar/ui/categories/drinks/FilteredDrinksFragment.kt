@@ -15,7 +15,7 @@ import com.tkachuk.cocktailbar.R
 import com.tkachuk.cocktailbar.databinding.FilteredDrinksFragmentBinding
 import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
 
-class FilteredDrinksFragment: Fragment() {
+class FilteredDrinksFragment : Fragment() {
 
     lateinit var root: View
     lateinit var binding: FilteredDrinksFragmentBinding
@@ -23,11 +23,11 @@ class FilteredDrinksFragment: Fragment() {
     private var errorSnackBar: Snackbar? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.filtered_drinks_fragment, container,false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.filtered_drinks_fragment, container, false)
         root = binding.root
 
         drinkListViewModel = ViewModelProviders.of(this).get(DrinkListViewModel::class.java)
-        val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         binding.drinkList.layoutManager = linearLayoutManager
 
         var category = ""
@@ -42,7 +42,7 @@ class FilteredDrinksFragment: Fragment() {
             if (errorMessage != null) showError(errorMessage, drinkListViewModel.errorClickListener) else hideError()
         })
 
-        drinkListViewModel = binding.drinkListViewModel!!
+        binding.drinkListViewModel = drinkListViewModel
         return root
     }
 
