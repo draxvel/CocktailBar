@@ -115,9 +115,11 @@ class MainActivity : AppCompatActivity() {
 //        swipeRefreshLayout.isRefreshing = false
 //    }
 
-//    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-//        searchView = menu?.findItem(R.id.search_item)?.actionView as SearchView
-//
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        searchView = menu?.findItem(R.id.search_item)?.actionView as SearchView
+        return true
+    }
+
 //        searchView?.setIconifiedByDefault(true)
 //        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 //            override fun onQueryTextSubmit(query: String?): Boolean {
@@ -141,11 +143,11 @@ class MainActivity : AppCompatActivity() {
 //        return true
 //    }
 //
-//    override fun onBackPressed() {
-//        if (searchView?.isIconified == false) {
-//            searchView?.isIconified = true
-//        } else {
-//            super.onBackPressed()
-//        }
-//    }
+    override fun onBackPressed() {
+        if (searchView?.isIconified == false) {
+            searchView?.isIconified = true
+        } else {
+            super.onBackPressed()
+        }
+    }
 }
