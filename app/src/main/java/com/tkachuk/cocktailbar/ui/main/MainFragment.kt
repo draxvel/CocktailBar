@@ -18,7 +18,6 @@ import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
 import com.tkachuk.cocktailbar.ui.fulldrink.FullDrinkActivity
 import com.tkachuk.cocktailbar.ui.ingredients.IngredientsListViewModel
 import com.tkachuk.cocktailbar.ui.searchbyingredient.SearchByIngredientActivity
-import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainFragment: Fragment() {
 
@@ -43,7 +42,6 @@ class MainFragment: Fragment() {
 
         val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         binding.drinkList.layoutManager = linearLayoutManager
-
 
         ingredientsListViewModel = ViewModelProviders.of(this).get(IngredientsListViewModel::class.java)
         ingredientsListViewModel.errorMessage.observe(this, Observer { errorMessage ->
@@ -80,16 +78,16 @@ class MainFragment: Fragment() {
 
         binding.drinkListViewModel = drinkListViewModel
 
-//        swipeRefreshLayout.setOnRefreshListener {
-//            ingredientsListViewModel.loadIngredients()
-//            searchView?.isIconified = true
-//            drinkListViewModel.loadRandom10Drink(true)
-//            binding.drinkList.clearOnScrollListeners()
-//            binding.drinkList.addOnScrollListener(InfiniteScrollListener(
-//                    { drinkListViewModel.loadRandom10Drink(false) },
-//                    linearLayoutManager))
-//            binding.drinkList.smoothScrollToPosition(0)
-//        }
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            ingredientsListViewModel.loadIngredients()
+            searchView?.isIconified = true
+            drinkListViewModel.loadRandom10Drink(true)
+            binding.drinkList.clearOnScrollListeners()
+            binding.drinkList.addOnScrollListener(InfiniteScrollListener(
+                    { drinkListViewModel.loadRandom10Drink(false) },
+                    linearLayoutManager))
+            binding.drinkList.smoothScrollToPosition(0)
+        }
 
         return binding.root
     }
@@ -104,7 +102,7 @@ class MainFragment: Fragment() {
 
     private fun hideError() {
         errorSnackbar?.dismiss()
-        swipeRefreshLayout.isRefreshing = false
+        binding.swipeRefreshLayout.isRefreshing = false
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?) {
