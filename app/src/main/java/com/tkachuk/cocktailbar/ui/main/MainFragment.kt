@@ -128,11 +128,8 @@ class MainFragment: Fragment() {
         inflater.inflate(R.menu.menu_main, menu)
     }
 
-//    override fun onBackPressed() {
-//        if (searchView?.isIconified == false) {
-//            searchView?.isIconified = true
-//        } else {
-//            super.onBackPressed()
-//        }
-//    }
+    override fun onDestroy() {
+        super.onDestroy()
+        hideError()
+    }
 }

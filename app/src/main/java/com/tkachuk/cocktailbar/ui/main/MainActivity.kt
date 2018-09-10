@@ -22,7 +22,8 @@ class MainActivity : AppCompatActivity(), IMainActivity {
     }
 
     override fun setTitleSupportActionBar(string: String) {
-        if (string.isEmpty()) supportActionBar?.title = getString(R.string.app_name)
+        if (string.isEmpty())
+            supportActionBar?.title  = getString(R.string.categories)
         else supportActionBar?.title = string
     }
 
@@ -35,8 +36,14 @@ class MainActivity : AppCompatActivity(), IMainActivity {
         val navigationView: NavigationView = findViewById(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.nav_main -> replaceFragment(MainFragment(), false)
-                R.id.nav_categories -> replaceFragment(CategoryFragment(), false)
+                R.id.nav_main -> {
+                    replaceFragment(MainFragment(), false)
+                    setTitleSupportActionBar(getString(R.string.app_name))
+                }
+                R.id.nav_categories -> {
+                    replaceFragment(CategoryFragment(), false)
+                    setTitleSupportActionBar(getString(R.string.categories))
+                }
             }
             menuItem.isChecked = true
             mDrawerLayout.closeDrawers()
