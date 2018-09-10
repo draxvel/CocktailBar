@@ -157,7 +157,7 @@ class DrinkListViewModel : BaseViewModel() {
         }
     }
 
-    fun loadFilteredDrinks(s: String){
+    fun loadFilteredDrinks(s: String) {
         subscription = drinkApi.getFilteredList(s)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

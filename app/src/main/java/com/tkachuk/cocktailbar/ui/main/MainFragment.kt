@@ -19,7 +19,7 @@ import com.tkachuk.cocktailbar.ui.fulldrink.FullDrinkActivity
 import com.tkachuk.cocktailbar.ui.ingredients.IngredientsListViewModel
 import com.tkachuk.cocktailbar.ui.searchbyingredient.SearchByIngredientActivity
 
-class MainFragment: Fragment() {
+class MainFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

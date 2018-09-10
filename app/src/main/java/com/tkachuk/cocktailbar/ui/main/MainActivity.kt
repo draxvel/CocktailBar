@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity(), IMainActivity {
 
     override fun setTitleSupportActionBar(string: String) {
         if (string.isEmpty())
-            supportActionBar?.title  = getString(R.string.categories)
+            supportActionBar?.title = getString(R.string.categories)
         else supportActionBar?.title = string
     }
 

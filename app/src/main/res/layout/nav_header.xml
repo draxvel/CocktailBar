@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="192dp"
+    android:layout_height="@dimen/size_large"
     android:background="?attr/colorPrimaryDark"
-    android:padding="16dp"
+    android:padding="@dimen/spacing_large"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
     android:orientation="vertical"
     android:gravity="bottom">
 
     <ImageView
         android:id="@+id/nav_header_imageView"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:src="@mipmap/ic_launcher" />
+        android:layout_width="@dimen/size_small"
+        android:layout_height="@dimen/size_small"
+        android:src="@mipmap/ic_launcher"
+        android:contentDescription="@string/app_name" />
 
     <TextView
         android:layout_width="match_parent"

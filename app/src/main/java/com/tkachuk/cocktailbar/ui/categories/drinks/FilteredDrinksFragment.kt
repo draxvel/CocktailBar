@@ -14,19 +14,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.tkachuk.cocktailbar.R
-import com.tkachuk.cocktailbar.databinding.FilteredDrinksFragmentBinding
+import com.tkachuk.cocktailbar.databinding.FragmentFilteredDrinksBinding
 import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
 import com.tkachuk.cocktailbar.ui.fulldrink.FullDrinkActivity
 
 class FilteredDrinksFragment : Fragment() {
 
     lateinit var root: View
-    lateinit var binding: FilteredDrinksFragmentBinding
+    lateinit var binding: FragmentFilteredDrinksBinding
     private lateinit var drinkListViewModel: DrinkListViewModel
     private var errorSnackBar: Snackbar? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.filtered_drinks_fragment, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_filtered_drinks, container, false)
         root = binding.root
 
         drinkListViewModel = ViewModelProviders.of(this).get(DrinkListViewModel::class.java)
