@@ -9,6 +9,7 @@ import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.Toolbar
 import com.tkachuk.cocktailbar.databinding.ActivityFullDrinkBinding
 
 class FullDrinkActivity : AppCompatActivity() {
@@ -18,10 +19,17 @@ class FullDrinkActivity : AppCompatActivity() {
     }
 
     private lateinit var fullDrinkViewModel: FullDrinkViewModel
-    private var errorSnackbar: Snackbar? = null
+    private var errorSnackBar: Snackbar? = null
+    private lateinit var toolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        toolbar = binding.fullDrinkToolbar
+        setSupportActionBar(toolbar)
+        toolbar.setNavigationOnClickListener {
+            finish()
+        }
 
         fullDrinkViewModel = ViewModelProviders.of(this).get(FullDrinkViewModel::class.java)
 
@@ -38,17 +46,15 @@ class FullDrinkActivity : AppCompatActivity() {
         fullDrinkViewModel.drinkName.observe(this, Observer { title ->
             supportActionBar?.title = title
         })
-        supportActionBar?.setHomeButtonEnabled(true)
-
         binding.recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
     }
 
     private fun showError(@StringRes errorMessage: Int) {
-        errorSnackbar = Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_INDEFINITE)
-        errorSnackbar?.show()
+        errorSnackBar = Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_INDEFINITE)
+        errorSnackBar?.show()
     }
 
     private fun hideError() {
-        errorSnackbar?.dismiss()
+        errorSnackBar?.dismiss()
     }
 }
