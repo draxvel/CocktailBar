@@ -8,17 +8,32 @@
             type="com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/drink_list"
-            app:adapter="@{drinkListViewModel.drinkListAdapter}"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/fragment_filtered_drinks_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:navigationIcon="?attr/homeAsUpIndicator"
+            app:theme="@style/AppTheme" />
+
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        </android.support.v7.widget.RecyclerView>
 
-    </android.support.constraint.ConstraintLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/drink_list"
+                app:adapter="@{drinkListViewModel.drinkListAdapter}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </android.support.v7.widget.RecyclerView>
 
+        </android.support.constraint.ConstraintLayout>
+
+    </LinearLayout>
 </layout>

@@ -39,7 +39,6 @@ class CategoryListAdapter(private val iMainActivity: IMainActivity) : RecyclerVi
             bundle.putString("category", categoryList[p1].strCategory)
             filteredDrinksFragment.arguments = bundle
             iMainActivity.replaceFragment(filteredDrinksFragment, true)
-            iMainActivity.setTitleSupportActionBar(categoryList[p1].strCategory)
         }
     }
 
