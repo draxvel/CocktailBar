@@ -38,7 +38,10 @@ class DrinkListViewModel : BaseViewModel() {
 
     override fun onCleared() {
         super.onCleared()
+        Log.d("draxvel", "DrinkListViewModel - onCleared")
         subscription.dispose()
+        drinkList.clear()
+        drinkListAdapter.clear()
     }
 
     fun loadRandom10Drink(update: Boolean) {

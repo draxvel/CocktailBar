@@ -2,6 +2,7 @@ package com.tkachuk.cocktailbar.injection.component
 
 import com.tkachuk.cocktailbar.injection.module.NetworkModule
 import com.tkachuk.cocktailbar.ui.categories.CategoryListViewModel
+import com.tkachuk.cocktailbar.ui.categories.CategoryViewModel
 import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
 import com.tkachuk.cocktailbar.ui.fulldrink.FullDrinkViewModel
 import com.tkachuk.cocktailbar.ui.ingredients.IngredientsListViewModel
@@ -16,6 +17,7 @@ interface ViewModelInjector {
     fun inject(drinkListViewModel: DrinkListViewModel)
     fun inject(fullDrinkViewModel: FullDrinkViewModel)
     fun inject(categoryListViewModel: CategoryListViewModel)
+    fun inject(categoryViewModel: CategoryViewModel)
 
     @Component.Builder
     interface Builder {

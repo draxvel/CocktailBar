@@ -8,15 +8,16 @@ import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.Toolbar
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.tkachuk.cocktailbar.R
 import com.tkachuk.cocktailbar.databinding.FragmentFilteredDrinksBinding
 import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
 import com.tkachuk.cocktailbar.ui.fulldrink.FullDrinkActivity
+import com.tkachuk.cocktailbar.ui.main.IMainActivity
 
 class FilteredDrinksFragment : Fragment() {
 
@@ -24,20 +25,36 @@ class FilteredDrinksFragment : Fragment() {
     lateinit var binding: FragmentFilteredDrinksBinding
     private lateinit var drinkListViewModel: DrinkListViewModel
     private var errorSnackBar: Snackbar? = null
+    private lateinit var toolbar: Toolbar
+    private lateinit var iMainActivity: IMainActivity
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_filtered_drinks, container, false)
         root = binding.root
-
-        drinkListViewModel = ViewModelProviders.of(this).get(DrinkListViewModel::class.java)
-        val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        binding.drinkList.layoutManager = linearLayoutManager
+        iMainActivity = activity as IMainActivity
 
         var category = ""
         val bundle = this.arguments
         if (bundle != null) {
             category = bundle.getString("category", "Ordinary Drink")
         }
+
+        toolbar = binding.fragmentFilteredDrinksToolbar
+        toolbar.title = category
+        val activity = activity as AppCompatActivity?
+        activity?.supportActionBar?.hide()
+        activity?.setSupportActionBar(toolbar)
+        toolbar.setNavigationOnClickListener {
+            Log.d("draxvel", "setNavigationOnClickListener")
+            activity?.supportActionBar?.hide()
+            iMainActivity.setMainToolbar()
+            activity?.supportActionBar?.show()
+            fragmentManager?.popBackStack()
+        }
+
+        drinkListViewModel = ViewModelProviders.of(this).get(DrinkListViewModel::class.java)
+        val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        binding.drinkList.layoutManager = linearLayoutManager
 
         drinkListViewModel.loadFilteredDrinks(category)
 

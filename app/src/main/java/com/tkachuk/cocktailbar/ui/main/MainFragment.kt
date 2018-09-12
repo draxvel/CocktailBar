@@ -31,14 +31,18 @@ class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
     private lateinit var ingredientsListViewModel: IngredientsListViewModel
     private lateinit var drinkListViewModel: DrinkListViewModel
+    private lateinit var iMainActivity: IMainActivity
 
-    private var errorSnackbar: Snackbar? = null
+    private var errorSnackBar: Snackbar? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        Log.d("draxvel", "MainFragment - onCreateView")
 
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_main, container, false)
+        iMainActivity = activity as IMainActivity
+        iMainActivity.setMainToolbar()
 
-        binding.ingredientsList.layoutManager = LinearLayoutManager(activity!!, LinearLayoutManager.HORIZONTAL, false)
+        binding.ingredientsList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
 
         val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         binding.drinkList.layoutManager = linearLayoutManager
@@ -93,15 +97,15 @@ class MainFragment : Fragment() {
     }
 
     private fun showError(@StringRes errorMessage: Int, errorClickListener: View.OnClickListener) {
-        errorSnackbar = Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_INDEFINITE)
+        errorSnackBar = Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_INDEFINITE)
         if (errorMessage != R.string.not_found) {
-            errorSnackbar?.setAction(R.string.retry, errorClickListener)
+            errorSnackBar?.setAction(R.string.retry, errorClickListener)
         }
-        errorSnackbar?.show()
+        errorSnackBar?.show()
     }
 
     private fun hideError() {
-        errorSnackbar?.dismiss()
+        errorSnackBar?.dismiss()
         binding.swipeRefreshLayout.isRefreshing = false
     }
 
