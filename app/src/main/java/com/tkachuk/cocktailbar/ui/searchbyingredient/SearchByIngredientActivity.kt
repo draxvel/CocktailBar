@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
+import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
 import android.view.View
@@ -21,16 +22,25 @@ import kotlinx.android.synthetic.main.activity_search_by_ingredient.*
 
 class SearchByIngredientActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivitySearchByIngredientBinding
+    private val binding: ActivitySearchByIngredientBinding by lazy {
+        DataBindingUtil.setContentView<ActivitySearchByIngredientBinding>(this, R.layout.activity_search_by_ingredient)
+    }
+
     private lateinit var drinkListViewModel: DrinkListViewModel
     private var errorSnackbar: Snackbar? = null
     private var searchView: SearchView? = null
+    private lateinit var toolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_by_ingredient)
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_search_by_ingredient)
+        toolbar = binding.searchByIngredientToolbar
+        setSupportActionBar(toolbar)
+        toolbar.setNavigationOnClickListener {
+            finish()
+        }
+
         val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.drinkList.layoutManager = linearLayoutManager
 

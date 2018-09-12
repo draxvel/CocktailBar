@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity(), IMainActivity {
         actionbar?.apply {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_menu)
+            show()
         }
     }
 

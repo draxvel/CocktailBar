@@ -36,9 +36,11 @@ class MainFragment : Fragment() {
     private var errorSnackBar: Snackbar? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        Log.d("draxvel", "MainFragment - onCreateView")
 
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_main, container, false)
         iMainActivity = activity as IMainActivity
+        iMainActivity.setMainToolbar()
 
         binding.ingredientsList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
 
