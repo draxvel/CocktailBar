@@ -83,7 +83,7 @@ class MainFragment : Fragment() {
         binding.drinkListViewModel = drinkListViewModel
 
         binding.swipeRefreshLayout.setOnRefreshListener {
-            ingredientsListViewModel.loadIngredients()
+            ingredientsListViewModel.loadIngredients(false)
             searchView?.isIconified = true
             drinkListViewModel.loadRandom10Drink(true)
             binding.drinkList.clearOnScrollListeners()

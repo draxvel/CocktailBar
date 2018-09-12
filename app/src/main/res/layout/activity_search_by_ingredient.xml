@@ -7,6 +7,11 @@
             name="drinkListViewModel"
             type="com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel">
         </variable>
+
+        <variable
+            name="ingredientsListViewModel"
+            type="com.tkachuk.cocktailbar.ui.ingredients.IngredientsListViewModel">
+        </variable>
     </data>
 
 
@@ -54,6 +59,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:adapter="@{drinkListViewModel.drinkListAdapter}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/ingredients_list_search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:adapter="@{ingredientsListViewModel.ingredientsListAdapter}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 

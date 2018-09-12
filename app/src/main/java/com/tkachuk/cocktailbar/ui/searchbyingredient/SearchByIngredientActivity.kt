@@ -16,8 +16,10 @@ import android.view.Menu
 import android.view.View
 import com.tkachuk.cocktailbar.R
 import com.tkachuk.cocktailbar.databinding.ActivitySearchByIngredientBinding
+import com.tkachuk.cocktailbar.model.Ingredient
 import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
 import com.tkachuk.cocktailbar.ui.fulldrink.FullDrinkActivity
+import com.tkachuk.cocktailbar.ui.ingredients.IngredientsListViewModel
 import kotlinx.android.synthetic.main.activity_search_by_ingredient.*
 
 class SearchByIngredientActivity : AppCompatActivity() {
@@ -27,9 +29,12 @@ class SearchByIngredientActivity : AppCompatActivity() {
     }
 
     private lateinit var drinkListViewModel: DrinkListViewModel
-    private var errorSnackbar: Snackbar? = null
+    private lateinit var ingredientListViewModel: IngredientsListViewModel
+    private var errorSnackBar: Snackbar? = null
     private var searchView: SearchView? = null
     private lateinit var toolbar: Toolbar
+
+    private var ingredientsList : List<Ingredient> = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +50,10 @@ class SearchByIngredientActivity : AppCompatActivity() {
         binding.drinkList.layoutManager = linearLayoutManager
 
         drinkListViewModel = ViewModelProviders.of(this).get(DrinkListViewModel::class.java)
+        ingredientListViewModel = ViewModelProviders.of(this).get(IngredientsListViewModel::class.java)
+
+        ingredientListViewModel.loadIngredients(false)
+
         drinkListViewModel.errorMessage.observe(this, Observer { errorMessage ->
             if (errorMessage != null) showError(errorMessage, drinkListViewModel.errorClickListener)
             else hideError()
@@ -65,7 +74,13 @@ class SearchByIngredientActivity : AppCompatActivity() {
             startActivity(intent)
         })
 
+        ingredientListViewModel.clickedIngredientName.observe(this, Observer { clickedIngredientName ->
+           searchByIngredient(clickedIngredientName!!)
+        })
+
         binding.drinkListViewModel = drinkListViewModel
+        binding.ingredientsListViewModel = ingredientListViewModel
+        binding.ingredientsListSearch.visibility = View.VISIBLE
     }
 
     private fun searchByIngredient(name: String) {
@@ -83,7 +98,8 @@ class SearchByIngredientActivity : AppCompatActivity() {
         drinkListViewModel.drinkListAdapter.clear()
         supportActionBar?.title = getString(R.string.search)
         binding.drinkList.visibility = View.INVISIBLE
-        binding.textView.visibility = View.VISIBLE
+                //binding.ingredientsListSearch.visibility = View.VISIBLE
+        binding.textView.visibility = View.INVISIBLE
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
@@ -120,14 +136,14 @@ class SearchByIngredientActivity : AppCompatActivity() {
     }
 
     private fun showError(@StringRes errorMessage: Int, errorClickListener: View.OnClickListener) {
-        errorSnackbar = Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_INDEFINITE)
+        errorSnackBar = Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_INDEFINITE)
         if (errorMessage != R.string.not_found) {
-            errorSnackbar?.setAction(R.string.retry, errorClickListener)
+            errorSnackBar?.setAction(R.string.retry, errorClickListener)
         }
-        errorSnackbar?.show()
+        errorSnackBar?.show()
     }
 
     private fun hideError() {
-        errorSnackbar?.dismiss()
+        errorSnackBar?.dismiss()
     }
 }
