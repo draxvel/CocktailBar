@@ -2,6 +2,7 @@ package com.tkachuk.cocktailbar.ui.main
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
@@ -9,6 +10,7 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBar
 import android.util.Log
 import android.view.MenuItem
+import android.widget.Toast
 import com.tkachuk.cocktailbar.R
 import com.tkachuk.cocktailbar.ui.categories.CategoryFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -16,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), IMainActivity {
 
     private lateinit var mDrawerLayout: DrawerLayout
+    private var doubleBackToExitPressedOnce = false
 
     override fun setMainToolbar() {
         Log.d("draxvel", "setMainToolbar")
@@ -77,6 +80,23 @@ class MainActivity : AppCompatActivity(), IMainActivity {
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed()
+            return
+        }
+
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.frame_layout)
+
+        if (currentFragment is MainFragment || currentFragment is CategoryFragment) {
+            this.doubleBackToExitPressedOnce = true
+            Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
+            Handler().postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
+        }else {
+            super.onBackPressed()
         }
     }
 }
