@@ -10,14 +10,17 @@
 
     <ImageView
         android:id="@+id/nav_header_imageView"
-        android:layout_width="@dimen/size_small"
+        android:layout_width="@dimen/size_medium"
         android:layout_height="@dimen/size_small"
-        android:src="@mipmap/ic_launcher"
+        android:src="@drawable/cockctail"
+        android:scaleType="centerCrop"
         android:contentDescription="@string/app_name" />
 
     <TextView
         android:layout_width="match_parent"
+        android:paddingTop="@dimen/spacing_small"
         android:layout_height="wrap_content"
+        android:textSize="@dimen/text_medium"
         android:text="@string/app_name"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 
