@@ -14,7 +14,7 @@ class CategoryViewModel: BaseViewModel() {
 
     @Inject
     lateinit var drinkApi: DrinkApi
-    private var subscription: Disposable? = null
+    private lateinit var subscription: Disposable
 
     private val categoryName = MutableLiveData<String>()
     private val categoryImage = MutableLiveData<String>()
@@ -43,5 +43,11 @@ class CategoryViewModel: BaseViewModel() {
 
     private fun onLoadPhotoPreviewForCategory(s: String){
         categoryImage.value = s
+    }
+
+
+    override fun onCleared() {
+        super.onCleared()
+        subscription.dispose()
     }
 }

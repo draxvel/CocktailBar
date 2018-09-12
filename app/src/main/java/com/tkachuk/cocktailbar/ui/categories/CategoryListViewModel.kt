@@ -18,7 +18,7 @@ class CategoryListViewModel(activity: FragmentActivity) : BaseViewModel() {
 
     @Inject
     lateinit var drinkApi: DrinkApi
-    private var subscription: Disposable? = null
+    private lateinit var subscription: Disposable
     var categoryListAdapter: CategoryListAdapter = CategoryListAdapter(activity as IMainActivity)
 
     private val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
@@ -27,7 +27,7 @@ class CategoryListViewModel(activity: FragmentActivity) : BaseViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        subscription?.dispose()
+        subscription.dispose()
     }
 
     fun loadCategories() {
