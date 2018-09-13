@@ -51,11 +51,12 @@ class SearchByIngredientActivity : AppCompatActivity() {
             else hideError()
         })
 
+        clearDrinkList()
+
         val name = intent.getStringExtra("name")
         if (!name.isNullOrEmpty()) {
             searchByIngredient(name)
         } else {
-            clearDrinkList()
             ingredientListViewModel.loadIngredients(false)
         }
 
