@@ -29,10 +29,6 @@ class IngredientsListViewModel : BaseViewModel() {
     val errorMessage: MutableLiveData<Int> = MutableLiveData()
     val errorClickListener = View.OnClickListener { loadIngredients(true) }
 
-    init {
-        loadIngredients(true)
-    }
-
     override fun onCleared() {
         super.onCleared()
         subscription.dispose()

@@ -8,9 +8,7 @@ import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.SearchView
-import android.support.v7.widget.Toolbar
+import android.support.v7.widget.*
 import android.util.Log
 import android.view.Menu
 import android.view.View
@@ -46,8 +44,8 @@ class SearchByIngredientActivity : AppCompatActivity() {
             finish()
         }
 
-        val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        binding.drinkList.layoutManager = linearLayoutManager
+        binding.drinkList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.ingredientsListSearch.layoutManager =  GridLayoutManager(this, 3)
 
         drinkListViewModel = ViewModelProviders.of(this).get(DrinkListViewModel::class.java)
         ingredientListViewModel = ViewModelProviders.of(this).get(IngredientsListViewModel::class.java)
