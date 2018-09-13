@@ -27,19 +27,19 @@ class DrinkListViewModel : BaseViewModel() {
 
     private var count = 0
 
-    private lateinit var subscription: Disposable
+    private var subscription: Disposable? = null
 
     val errorMessage: MutableLiveData<Int> = MutableLiveData()
     val errorClickListener = View.OnClickListener { loadRandom10Drink(false) }
 
     init {
-        loadRandom10Drink(false)
+       // loadRandom10Drink(false)
     }
 
     override fun onCleared() {
         super.onCleared()
         Log.d("draxvel", "DrinkListViewModel - onCleared")
-        subscription.dispose()
+        subscription?.dispose()
         drinkList.clear()
         drinkListAdapter.clear()
     }

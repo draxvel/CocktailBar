@@ -14,11 +14,9 @@ import android.view.Menu
 import android.view.View
 import com.tkachuk.cocktailbar.R
 import com.tkachuk.cocktailbar.databinding.ActivitySearchByIngredientBinding
-import com.tkachuk.cocktailbar.model.Ingredient
 import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
 import com.tkachuk.cocktailbar.ui.fulldrink.FullDrinkActivity
 import com.tkachuk.cocktailbar.ui.ingredients.IngredientsListViewModel
-import kotlinx.android.synthetic.main.activity_search_by_ingredient.*
 
 class SearchByIngredientActivity : AppCompatActivity() {
 
@@ -31,8 +29,6 @@ class SearchByIngredientActivity : AppCompatActivity() {
     private var errorSnackBar: Snackbar? = null
     private var searchView: SearchView? = null
     private lateinit var toolbar: Toolbar
-
-    private var ingredientsList : List<Ingredient> = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,19 +46,17 @@ class SearchByIngredientActivity : AppCompatActivity() {
         drinkListViewModel = ViewModelProviders.of(this).get(DrinkListViewModel::class.java)
         ingredientListViewModel = ViewModelProviders.of(this).get(IngredientsListViewModel::class.java)
 
-        ingredientListViewModel.loadIngredients(false)
-
         drinkListViewModel.errorMessage.observe(this, Observer { errorMessage ->
             if (errorMessage != null) showError(errorMessage, drinkListViewModel.errorClickListener)
             else hideError()
         })
 
-        clearList()
         val name = intent.getStringExtra("name")
         if (!name.isNullOrEmpty()) {
             searchByIngredient(name)
         } else {
-            drinkListViewModel.setVisible(false)
+            clearDrinkList()
+            ingredientListViewModel.loadIngredients(false)
         }
 
         drinkListViewModel.clickedDrinkId.observe(this, Observer { clickedDrinkId ->
@@ -73,6 +67,7 @@ class SearchByIngredientActivity : AppCompatActivity() {
         })
 
         ingredientListViewModel.clickedIngredientName.observe(this, Observer { clickedIngredientName ->
+            Log.d("draxvel", "clickedIngredientName")
            searchByIngredient(clickedIngredientName!!)
         })
 
@@ -84,20 +79,22 @@ class SearchByIngredientActivity : AppCompatActivity() {
     private fun searchByIngredient(name: String) {
         hideError()
         drinkListViewModel.searchByIngredient(name)
+        binding.ingredientsListSearch.visibility = View.INVISIBLE
         binding.drinkList.visibility = View.VISIBLE
-        binding.textView.visibility = View.INVISIBLE
         supportActionBar?.title = name
         binding.drinkList.smoothScrollToPosition(0)
+
+        searchView?.visibility = View.INVISIBLE
     }
 
-    private fun clearList() {
+    private fun clearDrinkList() {
         hideError()
         searchView?.isIconified = true
         drinkListViewModel.drinkListAdapter.clear()
         supportActionBar?.title = getString(R.string.search)
         binding.drinkList.visibility = View.INVISIBLE
-                //binding.ingredientsListSearch.visibility = View.VISIBLE
-        binding.textView.visibility = View.INVISIBLE
+        binding.ingredientsListSearch.visibility = View.VISIBLE
+        searchView?.visibility = View.VISIBLE
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
@@ -106,23 +103,21 @@ class SearchByIngredientActivity : AppCompatActivity() {
         searchView?.queryHint = getString(R.string.search_by_ingredient)
         searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                if (query != null && query != "") {
-                    searchByIngredient(query)
-                }
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText != null && newText != "") {
+                    ingredientListViewModel.search(newText)
+                }
                 return false
             }
         })
 
         val clearItem = menu.findItem(R.id.clear_item)
         clearItem.setOnMenuItemClickListener {
-            if (textView.visibility == View.VISIBLE) {
-                finish()
-            }
-            clearList()
+            ingredientListViewModel.loadIngredients(false)
+            clearDrinkList()
             return@setOnMenuItemClickListener true
         }
         return true

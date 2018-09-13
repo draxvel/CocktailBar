@@ -22,16 +22,18 @@ class IngredientsListViewModel : BaseViewModel() {
 
     val ingredientsListAdapter: IngredientsListAdapter = IngredientsListAdapter(this)
 
+    private var ingredientsList : List<Ingredient> = listOf()
+
     var clickedIngredientName: MutableLiveData<String> = MutableLiveData()
 
-    private lateinit var subscription: Disposable
+    private var subscription: Disposable? = null
 
     val errorMessage: MutableLiveData<Int> = MutableLiveData()
     val errorClickListener = View.OnClickListener { loadIngredients(true) }
 
     override fun onCleared() {
         super.onCleared()
-        subscription.dispose()
+        subscription?.dispose()
     }
 
     fun loadIngredients(only5elements: Boolean) {
@@ -63,7 +65,9 @@ class IngredientsListViewModel : BaseViewModel() {
 
     private fun onRetrievePostListSuccess(result: Ingredients) {
         Log.d("draxvel", "onRetrievePostListSuccess - "+result.drinks.toString())
-        ingredientsListAdapter.updateList(result.drinks)
+        updateAdapter(result.drinks)
+        ingredientsList = result.drinks
+        loadingVisibility.value = View.GONE
     }
 
     private fun onRetrievePostListError() {
@@ -75,5 +79,25 @@ class IngredientsListViewModel : BaseViewModel() {
         val mutableTempList = result.drinks.toMutableList()
         mutableTempList.shuffle(Random(System.currentTimeMillis()))
         return mutableTempList.toList().takeLast(count)
+    }
+
+    private fun updateAdapter(list: List<Ingredient>){
+        ingredientsListAdapter.updateList(list)
+    }
+
+    fun search(query: String) {
+
+        val filteredOutPut: MutableList<Ingredient> = mutableListOf()
+
+        if (ingredientsList.isNotEmpty()) {
+            for (item in ingredientsList) {
+                if (item.strIngredient1.toLowerCase().startsWith(query.toLowerCase())) {
+                    filteredOutPut.add(item)
+                }
+            }
+            if (filteredOutPut.isNotEmpty()) {
+                updateAdapter(filteredOutPut)
+            }
+        }
     }
 }
