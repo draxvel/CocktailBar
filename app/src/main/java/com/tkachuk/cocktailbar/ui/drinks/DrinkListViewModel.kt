@@ -1,10 +1,12 @@
 package com.tkachuk.cocktailbar.ui.drinks
 
+import android.app.Application
 import android.arch.lifecycle.MutableLiveData
 import android.util.Log
 import android.view.View
 import com.tkachuk.cocktailbar.R
 import com.tkachuk.cocktailbar.base.BaseViewModel
+import com.tkachuk.cocktailbar.database.DrinkRepository
 import com.tkachuk.cocktailbar.model.Drink
 import com.tkachuk.cocktailbar.model.Drinks
 import com.tkachuk.cocktailbar.network.DrinkApi
@@ -176,8 +178,8 @@ class DrinkListViewModel : BaseViewModel() {
         drinkListAdapter.updateList(result.drinks)
     }
 
-    fun loadFavorites() {
-
-
+    fun loadFavorites(application: Application) {
+        val repo = DrinkRepository(application)
+        drinkListAdapter.updateList(repo.drinkList)
     }
 }

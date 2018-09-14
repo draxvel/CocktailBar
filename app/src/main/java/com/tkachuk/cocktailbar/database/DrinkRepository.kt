@@ -1,11 +1,12 @@
 package com.tkachuk.cocktailbar.database
 
 import android.app.Application
+import android.os.AsyncTask
 import com.tkachuk.cocktailbar.model.Drink
 
 class DrinkRepository(application: Application) {
     private var drinkDao:DrinkDao
-    private var drinkList: List<Drink>
+    var drinkList: List<Drink>
 
     init{
         val drinkRoomDatabase = DrinkRoomDatabase.getDatabase(application.applicationContext)
@@ -14,6 +15,16 @@ class DrinkRepository(application: Application) {
     }
 
     fun insert(drink: Drink){
-        drinkDao.insert(drink)
+        insertTask(drinkDao).execute(drink)
+    }
+
+    class insertTask(drinkDao: DrinkDao) : AsyncTask<Drink, Void, Void>() {
+
+        private var dao: DrinkDao = drinkDao
+
+        override fun doInBackground(vararg params: Drink): Void? {
+            dao.insert(params[0])
+            return null
+        }
     }
 }

@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import com.tkachuk.cocktailbar.databinding.ActivityFullDrinkBinding
 
 class FullDrinkActivity : AppCompatActivity() {
@@ -47,6 +48,11 @@ class FullDrinkActivity : AppCompatActivity() {
             supportActionBar?.title = title
         })
         binding.recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+
+        binding.textView3.setOnClickListener {
+            Log.d("draxvel", "click on textview 3")
+            fullDrinkViewModel.insertDrink(this.application)
+        }
     }
 
     private fun showError(@StringRes errorMessage: Int) {

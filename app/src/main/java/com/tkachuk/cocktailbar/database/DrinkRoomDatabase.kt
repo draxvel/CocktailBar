@@ -18,6 +18,7 @@ abstract class DrinkRoomDatabase: RoomDatabase() {
             if(instance == null){
                 instance = Room.databaseBuilder(context.applicationContext,
                         DrinkRoomDatabase::class.java, "drinks")
+                        .allowMainThreadQueries()
                         .build()
             }
             return instance as DrinkRoomDatabase

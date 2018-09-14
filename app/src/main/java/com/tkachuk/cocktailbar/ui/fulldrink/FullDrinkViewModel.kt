@@ -1,10 +1,12 @@
 package com.tkachuk.cocktailbar.ui.fulldrink
 
+import android.app.Application
 import android.arch.lifecycle.MutableLiveData
 import android.util.Log
 import android.view.View
 import com.tkachuk.cocktailbar.R
 import com.tkachuk.cocktailbar.base.BaseViewModel
+import com.tkachuk.cocktailbar.database.DrinkRepository
 import com.tkachuk.cocktailbar.model.Drink
 import com.tkachuk.cocktailbar.model.Ingredient
 import com.tkachuk.cocktailbar.network.DrinkApi
@@ -19,6 +21,8 @@ class FullDrinkViewModel : BaseViewModel() {
     @Inject
     lateinit var drinkApi: DrinkApi
     private lateinit var subscription: Disposable
+
+    private var currentDrink: Drink? = null
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
 
     val errorMessage: MutableLiveData<Int> = MutableLiveData()
@@ -33,6 +37,7 @@ class FullDrinkViewModel : BaseViewModel() {
     val strInstructions = MutableLiveData<String>()
 
     fun bind(drink: Drink) {
+        currentDrink = drink
         drinkName.value = drink.strDrink
         drinkThumb.value = drink.strDrinkThumb
         strCategory.value = "Category: " + drink.strCategory
@@ -120,5 +125,10 @@ class FullDrinkViewModel : BaseViewModel() {
         } else {
             loadingVisibility.value = View.GONE
         }
+    }
+
+    fun insertDrink( application: Application){
+        val repo = DrinkRepository(application)
+        repo.insert(currentDrink!!)
     }
 }

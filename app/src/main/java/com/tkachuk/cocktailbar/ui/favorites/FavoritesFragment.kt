@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.tkachuk.cocktailbar.R
 import com.tkachuk.cocktailbar.databinding.FragmentFavoritesBinding
+import com.tkachuk.cocktailbar.model.Drink
 import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
 import com.tkachuk.cocktailbar.ui.fulldrink.FullDrinkActivity
 import com.tkachuk.cocktailbar.ui.main.IMainActivity
@@ -32,11 +33,11 @@ class FavoritesFragment: Fragment() {
         iMainActivity = activity as IMainActivity
         iMainActivity.setMainToolbar()
 
-
         drinkListViewModel = ViewModelProviders.of(this).get(DrinkListViewModel::class.java)
         val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         binding.drinkList.layoutManager = linearLayoutManager
-        drinkListViewModel.loadFavorites()
+
+        drinkListViewModel.loadFavorites(activity!!.application)
 
         drinkListViewModel.clickedDrinkId.observe(this, Observer { clickedDrinkId ->
             Log.d("draxvel", "observe click")
