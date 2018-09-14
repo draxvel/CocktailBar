@@ -178,8 +178,11 @@ class DrinkListViewModel : BaseViewModel() {
         drinkListAdapter.updateList(result.drinks)
     }
 
-    fun loadFavorites(application: Application) {
+    fun loadFavorites(application: Application):Boolean {
         val repo = DrinkRepository(application)
-        drinkListAdapter.updateList(repo.drinkList)
+        if(repo.drinkList.isNotEmpty()){
+            drinkListAdapter.updateList(repo.drinkList)
+            return true
+        }else return false
     }
 }

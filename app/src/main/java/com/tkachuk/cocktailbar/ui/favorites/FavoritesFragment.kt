@@ -37,7 +37,7 @@ class FavoritesFragment: Fragment() {
         val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         binding.drinkList.layoutManager = linearLayoutManager
 
-        drinkListViewModel.loadFavorites(activity!!.application)
+        setList()
 
         drinkListViewModel.clickedDrinkId.observe(this, Observer { clickedDrinkId ->
             Log.d("draxvel", "observe click")
@@ -52,6 +52,14 @@ class FavoritesFragment: Fragment() {
 
     override fun onResume() {
         super.onResume()
-        drinkListViewModel.loadFavorites(activity!!.application)
+        setList()
+    }
+
+    private fun setList(){
+        binding.drinkList.visibility = View.INVISIBLE
+
+        if(drinkListViewModel.loadFavorites(activity!!.application)){
+            binding.drinkList.visibility = View.VISIBLE
+        }
     }
 }

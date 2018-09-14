@@ -16,4 +16,5 @@
     <string name="favorite">Favorite</string>
     <string name="about">About</string>
     <string name="main">Main</string>
+    <string name="empty_list">Empty list</string>
 </resources>
