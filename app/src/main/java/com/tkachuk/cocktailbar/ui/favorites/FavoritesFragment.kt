@@ -49,4 +49,9 @@ class FavoritesFragment: Fragment() {
         binding.drinkListViewModel = drinkListViewModel
         return root
     }
+
+    override fun onResume() {
+        super.onResume()
+        drinkListViewModel.loadFavorites(activity!!.application)
+    }
 }

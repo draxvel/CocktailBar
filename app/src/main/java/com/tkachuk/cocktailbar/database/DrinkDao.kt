@@ -1,9 +1,6 @@
 package com.tkachuk.cocktailbar.database
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy
-import android.arch.persistence.room.Query
+import android.arch.persistence.room.*
 import com.tkachuk.cocktailbar.model.Drink
 
 @Dao
@@ -14,4 +11,10 @@ interface DrinkDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(drink: Drink)
+
+    @Delete
+    fun delete(drink: Drink)
+
+    @Query("SELECT * from drinks where idDrink = :id")
+    fun isDrinkInDatabase(id: Int): Drink?
 }

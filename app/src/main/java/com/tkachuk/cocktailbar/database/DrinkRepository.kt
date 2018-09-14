@@ -18,6 +18,14 @@ class DrinkRepository(application: Application) {
         insertTask(drinkDao).execute(drink)
     }
 
+    fun delete(drink: Drink) {
+        drinkDao.delete(drink)
+    }
+
+    fun isDrinkInDatabase(id: Int):Boolean {
+        return drinkDao.isDrinkInDatabase(id) == null
+    }
+
     class insertTask(drinkDao: DrinkDao) : AsyncTask<Drink, Void, Void>() {
 
         private var dao: DrinkDao = drinkDao
