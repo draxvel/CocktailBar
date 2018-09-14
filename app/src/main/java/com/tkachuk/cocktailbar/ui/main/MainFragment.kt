@@ -48,6 +48,7 @@ class MainFragment : Fragment() {
         binding.drinkList.layoutManager = linearLayoutManager
 
         ingredientsListViewModel = ViewModelProviders.of(this).get(IngredientsListViewModel::class.java)
+        ingredientsListViewModel.loadIngredients(true)
         ingredientsListViewModel.errorMessage.observe(this, Observer { errorMessage ->
             if (errorMessage != null) showError(errorMessage, ingredientsListViewModel.errorClickListener) else hideError()
         })
@@ -83,7 +84,7 @@ class MainFragment : Fragment() {
         binding.drinkListViewModel = drinkListViewModel
 
         binding.swipeRefreshLayout.setOnRefreshListener {
-            ingredientsListViewModel.loadIngredients()
+            ingredientsListViewModel.loadIngredients(true)
             searchView?.isIconified = true
             drinkListViewModel.loadRandom10Drink(true)
             binding.drinkList.clearOnScrollListeners()

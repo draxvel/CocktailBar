@@ -1,6 +1,7 @@
 package com.tkachuk.cocktailbar.ui.ingredients
 
 import android.arch.lifecycle.MutableLiveData
+import android.util.Log
 import android.view.View
 import com.tkachuk.cocktailbar.R
 import com.tkachuk.cocktailbar.base.BaseViewModel
@@ -21,23 +22,21 @@ class IngredientsListViewModel : BaseViewModel() {
 
     val ingredientsListAdapter: IngredientsListAdapter = IngredientsListAdapter(this)
 
+    private var ingredientsList : List<Ingredient> = listOf()
+
     var clickedIngredientName: MutableLiveData<String> = MutableLiveData()
 
-    private lateinit var subscription: Disposable
+    private var subscription: Disposable? = null
 
     val errorMessage: MutableLiveData<Int> = MutableLiveData()
-    val errorClickListener = View.OnClickListener { loadIngredients() }
-
-    init {
-        loadIngredients()
-    }
+    val errorClickListener = View.OnClickListener { loadIngredients(true) }
 
     override fun onCleared() {
         super.onCleared()
-        subscription.dispose()
+        subscription?.dispose()
     }
 
-    fun loadIngredients() {
+    fun loadIngredients(only5elements: Boolean) {
         subscription = drinkApi.getIngredientsList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -45,7 +44,12 @@ class IngredientsListViewModel : BaseViewModel() {
                 .doOnTerminate { onRetrievePostListFinish() }
                 .subscribe(
                         // Add result
-                        { result -> onRetrievePostListSuccess(result) },
+                        { result ->
+                            if(only5elements){
+                                val tempList = getRandomIngredients(result, 5).toMutableList()
+                                tempList.add(Ingredient("SEARCH MORE"))
+                                onRetrievePostListSuccess(Ingredients(tempList))
+                            }else onRetrievePostListSuccess(result) },
                         { msg -> onRetrievePostListError() }
                 )
     }
@@ -60,10 +64,10 @@ class IngredientsListViewModel : BaseViewModel() {
     }
 
     private fun onRetrievePostListSuccess(result: Ingredients) {
-//        ingredientsListAdapter.updateList(getRandomIngredients(result))
-        val tempList = getRandomIngredients(result, 5).toMutableList()
-        tempList.add(Ingredient("SEARCH MORE"))
-        ingredientsListAdapter.updateList(tempList)
+        Log.d("draxvel", "onRetrievePostListSuccess - "+result.drinks.toString())
+        updateAdapter(result.drinks)
+        ingredientsList = result.drinks
+        loadingVisibility.value = View.GONE
     }
 
     private fun onRetrievePostListError() {
@@ -75,5 +79,25 @@ class IngredientsListViewModel : BaseViewModel() {
         val mutableTempList = result.drinks.toMutableList()
         mutableTempList.shuffle(Random(System.currentTimeMillis()))
         return mutableTempList.toList().takeLast(count)
+    }
+
+    private fun updateAdapter(list: List<Ingredient>){
+        ingredientsListAdapter.updateList(list)
+    }
+
+    fun search(query: String) {
+
+        val filteredOutPut: MutableList<Ingredient> = mutableListOf()
+
+        if (ingredientsList.isNotEmpty()) {
+            for (item in ingredientsList) {
+                if (item.strIngredient1.toLowerCase().startsWith(query.toLowerCase())) {
+                    filteredOutPut.add(item)
+                }
+            }
+            if (filteredOutPut.isNotEmpty()) {
+                updateAdapter(filteredOutPut)
+            }
+        }
     }
 }
