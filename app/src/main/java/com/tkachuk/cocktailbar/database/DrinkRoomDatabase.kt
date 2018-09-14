@@ -10,14 +10,17 @@ import com.tkachuk.cocktailbar.model.Drink
 abstract class DrinkRoomDatabase: RoomDatabase() {
     abstract val drinkDao: DrinkDao
 
-    private var instance: DrinkRoomDatabase? = null
+    companion object {
 
-    fun getDatabase(context: Context): DrinkRoomDatabase{
-                if(instance == null){
-                    instance = Room.databaseBuilder(context.applicationContext,
-                            DrinkRoomDatabase::class.java, "drinks")
-                    .build()
-                }
-        return instance as DrinkRoomDatabase
+        private var instance: DrinkRoomDatabase? = null
+
+        fun getDatabase(context: Context): DrinkRoomDatabase{
+            if(instance == null){
+                instance = Room.databaseBuilder(context.applicationContext,
+                        DrinkRoomDatabase::class.java, "drinks")
+                        .build()
+            }
+            return instance as DrinkRoomDatabase
         }
+    }
 }
