@@ -1,6 +1,16 @@
 package com.tkachuk.cocktailbar.model
 
+import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
+import android.support.annotation.NonNull
+
+@Entity(tableName = "drinks")
 data class Drink(
+
+        @PrimaryKey
+        @NonNull
+        @ColumnInfo(name = "idDrink")
         val idDrink: Int,
         val strDrink: String,
         val strCategory: String,

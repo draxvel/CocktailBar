@@ -152,7 +152,7 @@ class DrinkListViewModel : BaseViewModel() {
         setVisible(false)
     }
 
-    fun setVisible(visible: Boolean) {
+    private fun setVisible(visible: Boolean) {
         if (visible) {
             loadingVisibility.value = View.VISIBLE
         } else {
@@ -174,5 +174,10 @@ class DrinkListViewModel : BaseViewModel() {
 
     private fun onFilteredDrinkSuccess(result: Drinks) {
         drinkListAdapter.updateList(result.drinks)
+    }
+
+    fun loadFavorites() {
+
+
     }
 }
