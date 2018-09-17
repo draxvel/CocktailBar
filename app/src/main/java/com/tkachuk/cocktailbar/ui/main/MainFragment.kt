@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.*
+import com.bumptech.glide.Glide
 import com.tkachuk.cocktailbar.R
 import com.tkachuk.cocktailbar.databinding.FragmentMainBinding
 import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
@@ -133,8 +134,15 @@ class MainFragment : Fragment() {
         inflater.inflate(R.menu.menu_main, menu)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         hideError()
+        Glide.get(context).clearMemory()
+    }
+
+    override fun onDestroyOptionsMenu() {
+        super.onDestroyOptionsMenu()
+            searchView?.setOnQueryTextListener(null)
+            binding.swipeRefreshLayout.setOnRefreshListener (null)
     }
 }
