@@ -1,10 +1,12 @@
 package com.tkachuk.cocktailbar.ui.drinks
 
+import android.app.Application
 import android.arch.lifecycle.MutableLiveData
 import android.util.Log
 import android.view.View
 import com.tkachuk.cocktailbar.R
 import com.tkachuk.cocktailbar.base.BaseViewModel
+import com.tkachuk.cocktailbar.database.DrinkRepository
 import com.tkachuk.cocktailbar.model.Drink
 import com.tkachuk.cocktailbar.model.Drinks
 import com.tkachuk.cocktailbar.network.DrinkApi
@@ -152,7 +154,7 @@ class DrinkListViewModel : BaseViewModel() {
         setVisible(false)
     }
 
-    fun setVisible(visible: Boolean) {
+    private fun setVisible(visible: Boolean) {
         if (visible) {
             loadingVisibility.value = View.VISIBLE
         } else {
@@ -174,5 +176,13 @@ class DrinkListViewModel : BaseViewModel() {
 
     private fun onFilteredDrinkSuccess(result: Drinks) {
         drinkListAdapter.updateList(result.drinks)
+    }
+
+    fun loadFavorites(application: Application):Boolean {
+        val repo = DrinkRepository(application)
+        if(repo.drinkList.isNotEmpty()){
+            drinkListAdapter.updateList(repo.drinkList)
+            return true
+        }else return false
     }
 }

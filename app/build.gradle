@@ -65,4 +65,8 @@ dependencies {
     implementation "com.android.support:design:$android_support_version"
     // Glide for downloading image
     implementation 'com.github.bumptech.glide:glide:3.7.0'
+
+    // Room
+    implementation "android.arch.persistence.room:runtime:1.1.1"
+    kapt "android.arch.persistence.room:compiler:1.1.1"
 }

@@ -3,15 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/search_by_ingredient"
-        app:showAsAction="always"
-        android:title="@string/search_by_ingredient"
-        android:icon="@mipmap/ic_search"
-        app:actionViewClass="android.support.v7.widget.SearchView"/>
-
-    <item
         android:id="@+id/clear_item"
         app:showAsAction="always"
         android:title="@string/clear"
         android:icon="@mipmap/ic_clear"/>
+
+    <item
+        android:id="@+id/search_by_ingredient"
+        app:showAsAction="ifRoom"
+        android:title="@string/search_by_ingredient"
+        android:icon="@mipmap/ic_search"
+        app:actionViewClass="android.support.v7.widget.SearchView"/>
+
 </menu>
