@@ -53,6 +53,7 @@ class DrinkListViewModel : BaseViewModel() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { onRetrieveStart() }
+                .doOnError { onRetrieveDrinkError("Error") }
                 .doOnTerminate { onRetrieveFinish() }
                 .subscribe(
                         //Add result
@@ -80,6 +81,7 @@ class DrinkListViewModel : BaseViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { onRetrieveStart() }
                 .doOnTerminate { onRetrieveFinish() }
+                .doOnError { onRetrieveDrinkError("Error") }
                 .subscribe(
                         { result -> onSearchDrinkSuccess(result) },
                         { onSearchDrinkError() }
@@ -92,6 +94,7 @@ class DrinkListViewModel : BaseViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { onRetrieveStart() }
                 .doOnTerminate { onRetrieveFinish() }
+                .doOnError { onRetrieveDrinkError("Error") }
                 .subscribe(
                         { result -> onSearchDrinkSuccess(result) },
                         { onSearchDrinkError() }
@@ -170,6 +173,7 @@ class DrinkListViewModel : BaseViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { onRetrieveStart() }
                 .doOnTerminate { onRetrieveFinish() }
+                .doOnError { onRetrieveDrinkError("Error") }
                 .subscribe(
                         { result -> onFilteredDrinkSuccess(result) },
                         { msg -> onRetrieveDrinkError(msg.localizedMessage) }

@@ -38,6 +38,7 @@ class CategoryListViewModel(activity: FragmentActivity) : BaseViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { onRetrieveCategoriesStart() }
                 .doOnTerminate { onRetrieveCategoriesFinish() }
+                .doOnError { onRetrieveDrinkError("Error") }
                 .subscribe(
                         //Add result
                         { result -> onRetrieveCategoriesSuccess(result) },
