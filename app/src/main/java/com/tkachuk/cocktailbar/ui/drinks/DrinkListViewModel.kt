@@ -44,6 +44,8 @@ class DrinkListViewModel : BaseViewModel() {
         subscription?.dispose()
         drinkList.clear()
         drinkListAdapter.clear()
+        loadingVisibility.value = null
+        errorMessage.value = null
     }
 
     fun loadRandom10Drink(update: Boolean) {
