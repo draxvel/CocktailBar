@@ -10,6 +10,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.tkachuk.cocktailbar.util.extension.getParentActivity
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+
+
+
 
 @BindingAdapter("mutableVisibility")
 fun setMutableVisibility(view: View, visibility: MutableLiveData<Int>?) {
@@ -42,9 +48,13 @@ fun setMutableImage(view: ImageView, url: MutableLiveData<String>?) {
         url.observe(parentActivity, Observer { value ->
             view.visibility = View.VISIBLE
 
+            var requestOptions = RequestOptions()
+            requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(10))
+            requestOptions.override(650, 650)
+
             Glide.with(parentActivity)
                     .load(value)
-                    .override(600, 600)
+                    .apply(requestOptions)
                     .into(view)
         })
     }

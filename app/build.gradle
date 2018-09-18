@@ -64,7 +64,7 @@ dependencies {
     // Support Design
     implementation "com.android.support:design:$android_support_version"
     // Glide for downloading image
-    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'com.github.bumptech.glide:glide:4.1.1'
 
     // Room
     implementation "android.arch.persistence.room:runtime:1.1.1"
@@ -75,9 +75,4 @@ dependencies {
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
     // Optional, if you use support library fragments:
     debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.1'
-
-    implementation 'id.zelory:compressor:2.1.0'
-
-    implementation 'com.squareup.picasso:picasso:2.71828'
-
 }
