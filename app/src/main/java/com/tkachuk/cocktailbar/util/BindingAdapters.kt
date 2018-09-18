@@ -9,16 +9,7 @@ import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 import com.tkachuk.cocktailbar.util.extension.getParentActivity
-import android.graphics.BitmapFactory
-import android.graphics.Bitmap
-import java.io.ByteArrayOutputStream
-import java.io.IOException
-import java.net.HttpURLConnection
-import java.net.URL
-import android.graphics.drawable.Drawable
-import com.squareup.picasso.Picasso
-import java.lang.Exception
-
+import com.bumptech.glide.Glide
 
 @BindingAdapter("mutableVisibility")
 fun setMutableVisibility(view: View, visibility: MutableLiveData<Int>?) {
@@ -51,31 +42,10 @@ fun setMutableImage(view: ImageView, url: MutableLiveData<String>?) {
         url.observe(parentActivity, Observer { value ->
             view.visibility = View.VISIBLE
 
-            Picasso.get()
+            Glide.with(parentActivity)
                     .load(value)
-                    .into(object: com.squareup.picasso.Target {
-                        override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
-                            TODO()
-                        }
-
-                        override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-                            TODO()
-                        }
-
-                        override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                            val stream = ByteArrayOutputStream()
-                            bitmap?.compress(Bitmap.CompressFormat.JPEG, 50, stream)
-                            val byteArray = stream.toByteArray()
-                            val compressedBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-
-                            view.setImageBitmap(compressedBitmap)
-                        }
-                    })
-//            var image: Image? = null
-//            Glide.with(parentActivity)
-//                    .load(value)
-//                    .override(600, 600)
-//                    .into(view)
+                    .override(600, 600)
+                    .into(view)
         })
     }
 }
@@ -84,5 +54,3 @@ fun setMutableImage(view: ImageView, url: MutableLiveData<String>?) {
 fun setAdapter(view: RecyclerView, adapter: RecyclerView.Adapter<*>) {
     view.adapter = adapter
 }
-
-fun TODO(){}
