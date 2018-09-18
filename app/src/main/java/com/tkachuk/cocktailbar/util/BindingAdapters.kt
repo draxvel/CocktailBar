@@ -14,20 +14,17 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 
-
-
-
 @BindingAdapter("mutableVisibility")
 fun setMutableVisibility(view: View, visibility: MutableLiveData<Int>?) {
     val parentActivity = view.getParentActivity()
     if (parentActivity != null && visibility != null) {
         visibility.observe(parentActivity, Observer { value ->
-            if (value == View.VISIBLE) {
-                parentActivity.window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-            } else {
-                parentActivity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-            }
+//            if (value == View.VISIBLE) {
+//                parentActivity.window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+//                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+//            } else {
+//                parentActivity.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+//            }
             view.visibility = value ?: View.VISIBLE
         })
     }
