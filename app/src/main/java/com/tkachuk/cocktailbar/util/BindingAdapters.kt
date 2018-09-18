@@ -43,6 +43,7 @@ fun setMutableImage(view: ImageView, url: MutableLiveData<String>?) {
             view.visibility = View.VISIBLE
             Glide.with(parentActivity)
                     .load(value)
+                    .override(600, 600)
                     .into(view)
         })
     }
