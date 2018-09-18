@@ -56,8 +56,10 @@ class CategoryFragment : Fragment() {
         errorSnackBar?.dismiss()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         hideError()
+        errorSnackBar = null
+        System.gc()
     }
 }

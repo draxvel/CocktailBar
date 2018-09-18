@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import com.tkachuk.cocktailbar.R
+import com.tkachuk.cocktailbar.ui.about.AboutFragment
 import com.tkachuk.cocktailbar.ui.categories.CategoryFragment
 import com.tkachuk.cocktailbar.ui.favorites.FavoritesFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -71,6 +72,11 @@ class MainActivity : AppCompatActivity(), IMainActivity {
                     replaceFragment(FavoritesFragment(), false)
                     setTitleSupportActionBar(getString(R.string.favorite))
                 }
+
+                R.id.nav_about -> {
+                    replaceFragment(AboutFragment(), false)
+                    setTitleSupportActionBar(getString(R.string.about))
+                }
             }
             menuItem.isChecked = true
             mDrawerLayout.closeDrawers()
@@ -98,7 +104,7 @@ class MainActivity : AppCompatActivity(), IMainActivity {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.frame_layout)
 
         if (currentFragment is MainFragment || currentFragment is CategoryFragment
-        || currentFragment is FavoritesFragment) {
+        || currentFragment is FavoritesFragment || currentFragment is AboutFragment) {
             this.doubleBackToExitPressedOnce = true
             Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
             Handler().postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
