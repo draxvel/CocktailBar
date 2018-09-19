@@ -8,11 +8,13 @@ import android.view.ViewGroup
 import com.tkachuk.cocktailbar.R
 import com.tkachuk.cocktailbar.databinding.ItemIngredientPhotoBinding
 import com.tkachuk.cocktailbar.model.Ingredient
+import com.tkachuk.cocktailbar.ui.fulldrink.FullDrinkViewModel
 import kotlinx.android.synthetic.main.item_ingredient_photo.view.*
 
-class IngredientPhotoListAdapter : RecyclerView.Adapter<IngredientPhotoListAdapter.ViewHolder>() {
+class IngredientPhotoListAdapter(private val fullDrinkViewModel: FullDrinkViewModel) : RecyclerView.Adapter<IngredientPhotoListAdapter.ViewHolder>() {
 
     private var photoIngredientList: List<Ingredient> = listOf()
+    private var isVisibleMeasure: Boolean = false
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         val binding: ItemIngredientPhotoBinding = DataBindingUtil.inflate(LayoutInflater.from(p0.context),
@@ -20,7 +22,8 @@ class IngredientPhotoListAdapter : RecyclerView.Adapter<IngredientPhotoListAdapt
         return ViewHolder(binding)
     }
 
-    fun setList(list: MutableList<Ingredient>) {
+    fun setList(list: MutableList<Ingredient>, value: Boolean) {
+        isVisibleMeasure  = value
         photoIngredientList = list.toList()
         notifyDataSetChanged()
     }
@@ -31,8 +34,11 @@ class IngredientPhotoListAdapter : RecyclerView.Adapter<IngredientPhotoListAdapt
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         p0.bind(photoIngredientList[p1])
+        p0.setVisibilityTextViewMeasure(isVisibleMeasure)
+
         p0.itemView.setOnClickListener {
-            p0.setVisibilityTextViewMeasure()
+            isVisibleMeasure = !isVisibleMeasure
+            fullDrinkViewModel.clickedPhotoIngredient.value = isVisibleMeasure
         }
     }
 
@@ -45,8 +51,8 @@ class IngredientPhotoListAdapter : RecyclerView.Adapter<IngredientPhotoListAdapt
             binding.ingredientPhotoViewModel = viewModel
         }
 
-        fun setVisibilityTextViewMeasure() {
-            if (textViewMeasure.visibility == View.GONE) textViewMeasure.visibility = View.VISIBLE
+        fun setVisibilityTextViewMeasure(visible: Boolean) {
+            if (visible) textViewMeasure.visibility = View.VISIBLE
             else textViewMeasure.visibility = View.GONE
         }
     }

@@ -1,7 +1,6 @@
 package com.tkachuk.cocktailbar.ui.fulldrink
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import com.tkachuk.cocktailbar.R
@@ -37,7 +36,7 @@ class FullDrinkActivity : AppCompatActivity() {
             finish()
         }
 
-        fullDrinkViewModel = ViewModelProviders.of(this).get(FullDrinkViewModel::class.java)
+        fullDrinkViewModel = FullDrinkViewModel(this)
 
         val id = intent.getIntExtra("id", 1)
 
@@ -88,12 +87,10 @@ class FullDrinkActivity : AppCompatActivity() {
                 Log.d("draxvel", "icon has border, replace!")
                 fullDrinkViewModel.insertDrink(this.application)
                 fullDrinkViewModel.drinkIsFavorite.value = true
-                //item.icon =  ContextCompat.getDrawable(this, R.mipmap.ic_fav)
             }else{
                 fullDrinkViewModel.deleteDrink(this.application)
                 Log.d("draxvel", "icon fav, replace!")
                 fullDrinkViewModel.drinkIsFavorite.value = false
-                //item.icon =  ContextCompat.getDrawable(this, R.mipmap.ic_fav_border)
             }
         }
         return true
