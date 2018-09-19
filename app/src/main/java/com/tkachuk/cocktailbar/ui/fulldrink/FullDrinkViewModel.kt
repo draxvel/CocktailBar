@@ -2,6 +2,7 @@ package com.tkachuk.cocktailbar.ui.fulldrink
 
 import android.app.Application
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Observer
 import android.util.Log
 import android.view.View
 import com.tkachuk.cocktailbar.R
@@ -16,7 +17,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class FullDrinkViewModel : BaseViewModel() {
+class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
 
     @Inject
     lateinit var drinkApi: DrinkApi
@@ -26,7 +27,8 @@ class FullDrinkViewModel : BaseViewModel() {
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
 
     val errorMessage: MutableLiveData<Int> = MutableLiveData()
-    val ingredientPhotoListAdapter = IngredientPhotoListAdapter()
+    val ingredientPhotoListAdapter = IngredientPhotoListAdapter(this)
+    var clickedPhotoIngredient: MutableLiveData<Boolean> = MutableLiveData()
 
     val drinkName = MutableLiveData<String>()
     val drinkThumb = MutableLiveData<String>()
@@ -78,7 +80,11 @@ class FullDrinkViewModel : BaseViewModel() {
             }
         }
 
-        ingredientPhotoListAdapter.setList(tempList)
+        ingredientPhotoListAdapter.setList(tempList, false)
+
+        clickedPhotoIngredient.observe(activity, Observer {
+            value-> ingredientPhotoListAdapter.setList(tempList, value!!)
+        })
     }
 
     override fun onCleared() {

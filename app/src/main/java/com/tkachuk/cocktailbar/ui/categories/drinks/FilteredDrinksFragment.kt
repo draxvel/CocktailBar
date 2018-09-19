@@ -84,4 +84,11 @@ class FilteredDrinksFragment : Fragment() {
     private fun hideError() {
         errorSnackBar?.dismiss()
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        hideError()
+        errorSnackBar = null
+        System.gc()
+    }
 }

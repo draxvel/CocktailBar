@@ -65,8 +65,9 @@ class IngredientsListViewModel : BaseViewModel() {
 
     private fun onRetrievePostListSuccess(result: Ingredients) {
         Log.d("draxvel", "onRetrievePostListSuccess - "+result.drinks.toString())
-        updateAdapter(result.drinks)
-        ingredientsList = result.drinks
+        val sortedList = result.drinks.sortedBy { it.strIngredient1 }
+        updateAdapter(sortedList)
+        ingredientsList = sortedList
         loadingVisibility.value = View.GONE
     }
 
@@ -82,6 +83,7 @@ class IngredientsListViewModel : BaseViewModel() {
     }
 
     private fun updateAdapter(list: List<Ingredient>){
+        Log.d("draxvel", list.toString())
         ingredientsListAdapter.updateList(list)
     }
 

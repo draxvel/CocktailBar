@@ -36,15 +36,15 @@ class CategoryViewModel: BaseViewModel() {
         subscription = drinkApi.getFilteredList(s)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { result ->
+                .subscribe ({ result ->
                     val random = (0 until result.drinks.size).random()
-                    onLoadPhotoPreviewForCategory(result.drinks[random].strDrinkThumb)}
+                    onLoadPhotoPreviewForCategory(result.drinks[random].strDrinkThumb)},
+                        {})
     }
 
     private fun onLoadPhotoPreviewForCategory(s: String){
         categoryImage.value = s
     }
-
 
     override fun onCleared() {
         super.onCleared()
