@@ -1,7 +1,7 @@
 package com.tkachuk.cocktailbar.ui.fulldrink.ingredients
 
 import android.arch.lifecycle.MutableLiveData
-import com.tkachuk.cocktailbar.base.BaseViewModel
+import com.tkachuk.cocktailbar.ui.base.BaseViewModel
 import com.tkachuk.cocktailbar.model.Ingredient
 import com.tkachuk.cocktailbar.util.BASE_URL_IMAGES
 

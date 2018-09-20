@@ -1,9 +1,9 @@
 package com.tkachuk.cocktailbar.ui.categories
 
 import android.arch.lifecycle.MutableLiveData
-import com.tkachuk.cocktailbar.base.BaseViewModel
+import com.tkachuk.cocktailbar.ui.base.BaseViewModel
 import com.tkachuk.cocktailbar.model.Category
-import com.tkachuk.cocktailbar.network.DrinkApi
+import com.tkachuk.cocktailbar.network.Api
 import com.tkachuk.cocktailbar.util.extension.random
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -13,7 +13,7 @@ import javax.inject.Inject
 class CategoryViewModel: BaseViewModel() {
 
     @Inject
-    lateinit var drinkApi: DrinkApi
+    lateinit var api: Api
     private lateinit var subscription: Disposable
 
     private val categoryName = MutableLiveData<String>()
@@ -33,7 +33,7 @@ class CategoryViewModel: BaseViewModel() {
     }
 
     private fun loadPhotoPreviewForCategory(s: String){
-        subscription = drinkApi.getFilteredList(s)
+        subscription = api.getFilteredList(s)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe ({ result ->

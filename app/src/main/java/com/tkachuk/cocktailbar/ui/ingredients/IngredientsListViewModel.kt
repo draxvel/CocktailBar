@@ -4,10 +4,10 @@ import android.arch.lifecycle.MutableLiveData
 import android.util.Log
 import android.view.View
 import com.tkachuk.cocktailbar.R
-import com.tkachuk.cocktailbar.base.BaseViewModel
+import com.tkachuk.cocktailbar.ui.base.BaseViewModel
 import com.tkachuk.cocktailbar.model.Ingredient
 import com.tkachuk.cocktailbar.model.Ingredients
-import com.tkachuk.cocktailbar.network.DrinkApi
+import com.tkachuk.cocktailbar.network.Api
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 class IngredientsListViewModel : BaseViewModel() {
     @Inject
-    lateinit var drinkApi: DrinkApi
+    lateinit var api: Api
 
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
 
@@ -37,7 +37,7 @@ class IngredientsListViewModel : BaseViewModel() {
     }
 
     fun loadIngredients(only5elements: Boolean) {
-        subscription = drinkApi.getIngredientsList()
+        subscription = api.getIngredientsList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { onRetrievePostListStart() }

@@ -5,9 +5,9 @@ import android.support.v4.app.FragmentActivity
 import android.util.Log
 import android.view.View
 import com.tkachuk.cocktailbar.R
-import com.tkachuk.cocktailbar.base.BaseViewModel
+import com.tkachuk.cocktailbar.ui.base.BaseViewModel
 import com.tkachuk.cocktailbar.model.Categories
-import com.tkachuk.cocktailbar.network.DrinkApi
+import com.tkachuk.cocktailbar.network.Api
 import com.tkachuk.cocktailbar.ui.main.IMainActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class CategoryListViewModel(activity: FragmentActivity) : BaseViewModel() {
 
     @Inject
-    lateinit var drinkApi: DrinkApi
+    lateinit var api: Api
     private var subscription: Disposable? = null
     var categoryListAdapter: CategoryListAdapter = CategoryListAdapter(activity as IMainActivity)
 
@@ -33,7 +33,7 @@ class CategoryListViewModel(activity: FragmentActivity) : BaseViewModel() {
     }
 
     fun loadCategories() {
-        subscription = drinkApi.getCategoriesList()
+        subscription = api.getCategoriesList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { onRetrieveCategoriesStart() }
