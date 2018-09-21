@@ -10,6 +10,7 @@ import com.tkachuk.cocktailbar.model.Drink
 import com.tkachuk.cocktailbar.network.Api
 import com.tkachuk.cocktailbar.ui.base.BaseRepositoryModel
 import com.tkachuk.cocktailbar.util.COUNT_OF_DRINKS_FOR_GETTING_RANDOM
+import com.tkachuk.cocktailbar.util.TIMEOUT_FOR_LOADING
 import com.tkachuk.cocktailbar.util.extension.random
 import com.tkachuk.cocktailbar.util.isNetworkConnected
 import io.reactivex.Observable
@@ -58,7 +59,18 @@ class DrinkRepository(val api: Api, val context: Context) : BaseRepositoryModel(
         api.searchCocktails(str)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .debounce(5, TimeUnit.SECONDS)
+                .debounce(TIMEOUT_FOR_LOADING, TimeUnit.SECONDS)
+                .subscribe(
+                        { result -> loadingMainCallBack.onLoad(Observable.fromArray(result.drinks)) },
+                        { msg -> loadingMainCallBack.onError(msg.localizedMessage?:"Error") }
+                )
+    }
+
+    fun searchByIngredient(str: String, loadingMainCallBack: CallBack.LoadingMainCallBack) {
+        api.searchByIngredient(str)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .debounce(TIMEOUT_FOR_LOADING, TimeUnit.SECONDS)
                 .subscribe(
                         { result -> loadingMainCallBack.onLoad(Observable.fromArray(result.drinks)) },
                         { msg -> loadingMainCallBack.onError(msg.localizedMessage?:"Error") }
@@ -69,7 +81,7 @@ class DrinkRepository(val api: Api, val context: Context) : BaseRepositoryModel(
         drinkDao.getDrinks()
                 .filter { it.isNotEmpty() }
                 .toObservable()
-                .debounce(5, TimeUnit.SECONDS)
+                .debounce(TIMEOUT_FOR_LOADING, TimeUnit.SECONDS)
                 .subscribe({ result ->
                     val random = (0 until result.size).random()
                     if (counter < COUNT_OF_DRINKS_FOR_GETTING_RANDOM) {
@@ -97,7 +109,7 @@ class DrinkRepository(val api: Api, val context: Context) : BaseRepositoryModel(
         api.getRandom()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .debounce(5, TimeUnit.SECONDS)
+                .debounce(TIMEOUT_FOR_LOADING, TimeUnit.SECONDS)
                 .subscribe({ result ->
                     if (counter < COUNT_OF_DRINKS_FOR_GETTING_RANDOM) {
                         if (tempDrinkList.contains(result.drinks[0])) {

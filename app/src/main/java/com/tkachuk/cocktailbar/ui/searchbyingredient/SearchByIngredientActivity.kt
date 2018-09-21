@@ -43,7 +43,7 @@ class SearchByIngredientActivity : AppCompatActivity() {
         binding.drinkList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.ingredientsListSearch.layoutManager =  GridLayoutManager(this, 3)
 
-        drinkListViewModel = ViewModelProviders.of(this).get(DrinkListViewModel::class.java)
+        drinkListViewModel = DrinkListViewModel(applicationContext)
         ingredientListViewModel = ViewModelProviders.of(this).get(IngredientsListViewModel::class.java)
 
         drinkListViewModel.errorMessage.observe(this, Observer { errorMessage ->

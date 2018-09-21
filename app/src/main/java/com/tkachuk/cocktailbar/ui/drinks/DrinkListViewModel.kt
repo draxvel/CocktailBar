@@ -42,6 +42,7 @@ class DrinkListViewModel(val context: Context) : BaseViewModel() {
         errorMessage.value = null
     }
 
+    //Main Fragment
     fun loadRandomDrinks(update: Boolean) {
         onRetrieveStart()
         drinkRepository.getDrinks(loadingMainCallBack = object : CallBack.LoadingMainCallBack {
@@ -58,6 +59,7 @@ class DrinkListViewModel(val context: Context) : BaseViewModel() {
         })
     }
 
+    //Main Fragment
     fun searchCocktails(str: String) {
         onRetrieveStart()
         drinkRepository.searchCocktails(str, loadingMainCallBack = object : CallBack.LoadingMainCallBack{
@@ -73,17 +75,22 @@ class DrinkListViewModel(val context: Context) : BaseViewModel() {
         })
     }
 
+    //MainFragment
     fun searchByIngredient(str: String) {
-        subscription = api.searchByIngredient(str)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { onRetrieveStart() }
-                .doOnTerminate { onRetrieveFinish() }
-                .doOnError { onRetrieveDrinkError() }
-                .subscribe(
-                        { result -> onRetrieveDrinkSuccess(result.drinks, true) },
-                        { onSearchDrinkError() }
-                )
+        onRetrieveStart()
+        drinkRepository.searchByIngredient(str, loadingMainCallBack = object : CallBack.LoadingMainCallBack{
+
+            override fun onLoad(list: Observable<List<Drink>>) {
+                list.subscribe {
+                    onRetrieveDrinkSuccess(it, true)
+                    onRetrieveFinish()
+                }
+            }
+
+            override fun onError(msg: String) {
+                onSearchDrinkError()            }
+
+        })
     }
 
     private fun onRetrieveStart() {
