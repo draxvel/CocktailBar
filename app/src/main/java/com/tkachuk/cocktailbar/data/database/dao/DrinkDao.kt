@@ -13,6 +13,9 @@ interface DrinkDao {
     @Query("SELECT * from drink where strDrink LIKE :str")
     fun searchCocktails(str: String): Single<List<Drink>>
 
+    @Query("SELECT * from drink where strCategory == :str")
+    fun getFilteredList(str: String): Single<List<Drink>>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(drink: Drink)
 
