@@ -49,7 +49,7 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
         strGlass.value = "Glass: " + drink.strGlass
         strInstructions.value = drink.strInstructions
 
-        val repo = DrinkRepository(api, activity.applicationContext)
+        val repo = DrinkRepository(activity.applicationContext)
         drinkIsFavorite.value = !repo.isDrinkInDatabase(currentDrink.idDrink)
 
         val tempList: MutableList<Ingredient> = mutableListOf()
@@ -139,14 +139,14 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
     }
 
     fun insertDrink( application: Application){
-        val repo = DrinkRepository(api, application)
+        val repo = DrinkRepository(application)
         Log.d("draxvel", "insert: "+currentDrink.strDrink)
 
         repo.insert(currentDrink)
     }
 
     fun deleteDrink(application: Application) {
-        val repo = DrinkRepository(api, application)
+        val repo = DrinkRepository(application)
         Log.d("draxvel", "delete: "+currentDrink.strDrink)
         repo.delete(currentDrink)
     }

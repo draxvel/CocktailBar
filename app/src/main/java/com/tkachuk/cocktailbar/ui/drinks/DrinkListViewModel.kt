@@ -9,20 +9,15 @@ import com.tkachuk.cocktailbar.data.database.CallBack
 import com.tkachuk.cocktailbar.ui.base.BaseViewModel
 import com.tkachuk.cocktailbar.data.repository.DrinkRepository
 import com.tkachuk.cocktailbar.model.Drink
-import com.tkachuk.cocktailbar.network.Api
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
-import javax.inject.Inject
 
 class DrinkListViewModel(val context: Context) : BaseViewModel() {
-
-    @Inject
-    lateinit var api: Api
 
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
 
     val drinkListAdapter: DrinkListAdapter = DrinkListAdapter(this)
-    private val drinkRepository = DrinkRepository(api, context)
+    private val drinkRepository = DrinkRepository(context)
 
     var clickedDrinkId: MutableLiveData<Int> = MutableLiveData()
 

@@ -17,8 +17,12 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class DrinkRepository(val api: Api, val context: Context) : BaseRepositoryModel() {
+class DrinkRepository(val context: Context) : BaseRepositoryModel() {
+
+    @Inject
+    lateinit var api: Api
 
     private val drinkDao = AppDatabase.getDatabase(context).drinkDao
 
