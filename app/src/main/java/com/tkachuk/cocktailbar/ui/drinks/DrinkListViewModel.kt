@@ -27,10 +27,7 @@ class DrinkListViewModel(val context: Context) : BaseViewModel() {
     val drinkListAdapter: DrinkListAdapter = DrinkListAdapter(this)
     private val drinkRepository = DrinkRepository(api, context)
 
-    private var drinkList: MutableList<Drink> = mutableListOf()
     var clickedDrinkId: MutableLiveData<Int> = MutableLiveData()
-
-    private var count = 0
 
     private var subscription: Disposable? = null
 
@@ -40,16 +37,13 @@ class DrinkListViewModel(val context: Context) : BaseViewModel() {
     override fun onCleared() {
         super.onCleared()
         subscription?.dispose()
-        drinkList.clear()
         drinkListAdapter.clear()
         loadingVisibility.value = null
         errorMessage.value = null
     }
 
     fun loadRandomDrinks(update: Boolean) {
-
         onRetrieveStart()
-
         drinkRepository.getDrinks(loadingMainCallBack = object : CallBack.LoadingMainCallBack {
             override fun onLoad(list: Observable<List<Drink>>) {
                 list.subscribe {
@@ -59,23 +53,24 @@ class DrinkListViewModel(val context: Context) : BaseViewModel() {
             }
 
             override fun onError(msg: String) {
-                onRetrieveDrinkError(msg)
+                onRetrieveDrinkError()
             }
         })
     }
 
-
     fun searchCocktails(str: String) {
-        subscription = api.searchCocktails(str)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { onRetrieveStart() }
-                .doOnTerminate { onRetrieveFinish() }
-                .doOnError { onRetrieveDrinkError("Error") }
-                .subscribe(
-                        { result -> onSearchDrinkSuccess(result) },
-                        { onSearchDrinkError() }
-                )
+        onRetrieveStart()
+        drinkRepository.searchCocktails(str, loadingMainCallBack = object : CallBack.LoadingMainCallBack{
+            override fun onLoad(list: Observable<List<Drink>>) {
+                list.subscribe {
+                    onRetrieveDrinkSuccess(it, true)
+                    onRetrieveFinish()
+                }
+            }
+            override fun onError(msg: String) {
+                onSearchDrinkError()
+            }
+        })
     }
 
     fun searchByIngredient(str: String) {
@@ -84,9 +79,9 @@ class DrinkListViewModel(val context: Context) : BaseViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { onRetrieveStart() }
                 .doOnTerminate { onRetrieveFinish() }
-                .doOnError { onRetrieveDrinkError("Error") }
+                .doOnError { onRetrieveDrinkError() }
                 .subscribe(
-                        { result -> onSearchDrinkSuccess(result) },
+                        { result -> onRetrieveDrinkSuccess(result.drinks, true) },
                         { onSearchDrinkError() }
                 )
     }
@@ -106,19 +101,11 @@ class DrinkListViewModel(val context: Context) : BaseViewModel() {
         } else {
             drinkListAdapter.addToList(drinks.toMutableList())
         }
-        drinkList = drinks.toMutableList()
-        count = 0
     }
 
-    private fun onRetrieveDrinkError(msg: String) {
+    private fun onRetrieveDrinkError() {
         errorMessage.value = R.string.loading_error
         setVisible(false)
-    }
-
-    private fun onSearchDrinkSuccess(result: Drinks) {
-        drinkListAdapter.updateList(result.drinks)
-        drinkList = mutableListOf()
-        count = 0
     }
 
     private fun onSearchDrinkError() {
@@ -140,10 +127,10 @@ class DrinkListViewModel(val context: Context) : BaseViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { onRetrieveStart() }
                 .doOnTerminate { onRetrieveFinish() }
-                .doOnError { onRetrieveDrinkError("Error") }
+                .doOnError { onRetrieveDrinkError() }
                 .subscribe(
                         { result -> onFilteredDrinkSuccess(result) },
-                        { msg -> onRetrieveDrinkError(msg.localizedMessage) }
+                        { msg -> onRetrieveDrinkError() }
                 )
     }
 
