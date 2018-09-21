@@ -77,6 +77,17 @@ class DrinkRepository(val api: Api, val context: Context) : BaseRepositoryModel(
                 )
     }
 
+    fun loadFilteredDrinks(str: String, loadingMainCallBack: CallBack.LoadingMainCallBack) {
+        api.getFilteredList(str)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .debounce(TIMEOUT_FOR_LOADING, TimeUnit.SECONDS)
+                .subscribe(
+                        { result -> loadingMainCallBack.onLoad(Observable.fromArray(result.drinks)) },
+                        { msg -> loadingMainCallBack.onError(msg.localizedMessage?:"Error") }
+                )
+    }
+
     private fun getDrinksFromBD(loadingDBCallBack: CallBack.LoadingDBCallBack) {
         drinkDao.getDrinks()
                 .filter { it.isNotEmpty() }

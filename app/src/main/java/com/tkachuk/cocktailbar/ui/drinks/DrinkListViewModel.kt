@@ -9,12 +9,9 @@ import com.tkachuk.cocktailbar.data.database.CallBack
 import com.tkachuk.cocktailbar.ui.base.BaseViewModel
 import com.tkachuk.cocktailbar.data.repository.DrinkRepository
 import com.tkachuk.cocktailbar.model.Drink
-import com.tkachuk.cocktailbar.model.Drinks
 import com.tkachuk.cocktailbar.network.Api
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class DrinkListViewModel(val context: Context) : BaseViewModel() {
@@ -93,6 +90,23 @@ class DrinkListViewModel(val context: Context) : BaseViewModel() {
         })
     }
 
+    fun loadFilteredDrinks(str: String) {
+        onRetrieveStart()
+        drinkRepository.loadFilteredDrinks(str, loadingMainCallBack = object : CallBack.LoadingMainCallBack{
+
+            override fun onLoad(list: Observable<List<Drink>>) {
+                list.subscribe {
+                    onRetrieveDrinkSuccess(it, true)
+                    onRetrieveFinish()
+                }
+            }
+
+            override fun onError(msg: String) {
+                onSearchDrinkError()
+            }
+        })
+    }
+
     private fun onRetrieveStart() {
         setVisible(true)
         errorMessage.value = null
@@ -126,23 +140,6 @@ class DrinkListViewModel(val context: Context) : BaseViewModel() {
         } else {
             loadingVisibility.value = View.GONE
         }
-    }
-
-    fun loadFilteredDrinks(s: String) {
-        subscription = api.getFilteredList(s)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { onRetrieveStart() }
-                .doOnTerminate { onRetrieveFinish() }
-                .doOnError { onRetrieveDrinkError() }
-                .subscribe(
-                        { result -> onFilteredDrinkSuccess(result) },
-                        { msg -> onRetrieveDrinkError() }
-                )
-    }
-
-    private fun onFilteredDrinkSuccess(result: Drinks) {
-        drinkListAdapter.updateList(result.drinks)
     }
 
     fun loadFavorites(application: Application): Boolean {

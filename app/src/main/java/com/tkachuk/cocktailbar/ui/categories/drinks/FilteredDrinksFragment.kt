@@ -1,7 +1,6 @@
 package com.tkachuk.cocktailbar.ui.categories.drinks
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -52,7 +51,7 @@ class FilteredDrinksFragment : Fragment() {
             fragmentManager?.popBackStack()
         }
 
-        drinkListViewModel = ViewModelProviders.of(this).get(DrinkListViewModel::class.java)
+        drinkListViewModel = DrinkListViewModel(getActivity()!!.applicationContext)
         val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         binding.drinkList.layoutManager = linearLayoutManager
 
