@@ -54,8 +54,8 @@ class MainFragment : Fragment() {
             if (errorMessage != null) showError(errorMessage, ingredientsListViewModel.errorClickListener) else hideError()
         })
 
-        drinkListViewModel = ViewModelProviders.of(this).get(DrinkListViewModel::class.java)
-        drinkListViewModel.loadRandom10Drink(false)
+        drinkListViewModel = DrinkListViewModel(activity!!.applicationContext)
+        drinkListViewModel.loadRandomDrinks(false)
         drinkListViewModel.errorMessage.observe(this, Observer { errorMessage ->
             if (errorMessage != null) showError(errorMessage, drinkListViewModel.errorClickListener) else hideError()
         })
@@ -79,7 +79,7 @@ class MainFragment : Fragment() {
 
         binding?.drinkList?.clearOnScrollListeners()
         binding?.drinkList?.addOnScrollListener(InfiniteScrollListener(
-                { drinkListViewModel.loadRandom10Drink(false) },
+                { drinkListViewModel.loadRandomDrinks(false) },
                 linearLayoutManager))
 
         binding?.drinkListViewModel = drinkListViewModel
@@ -87,10 +87,10 @@ class MainFragment : Fragment() {
         binding?.swipeRefreshLayout?.setOnRefreshListener {
             ingredientsListViewModel.loadIngredients(true)
             searchView?.isIconified = true
-            drinkListViewModel.loadRandom10Drink(true)
+            drinkListViewModel.loadRandomDrinks(true)
             binding?.drinkList?.clearOnScrollListeners()
             binding?.drinkList?.addOnScrollListener(InfiniteScrollListener(
-                    { drinkListViewModel.loadRandom10Drink(false) },
+                    { drinkListViewModel.loadRandomDrinks(false) },
                     linearLayoutManager))
             binding?.drinkList?.smoothScrollToPosition(0)
         }

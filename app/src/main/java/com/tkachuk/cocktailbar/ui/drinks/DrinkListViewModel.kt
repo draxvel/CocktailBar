@@ -2,27 +2,30 @@ package com.tkachuk.cocktailbar.ui.drinks
 
 import android.app.Application
 import android.arch.lifecycle.MutableLiveData
-import android.util.Log
+import android.content.Context
 import android.view.View
 import com.tkachuk.cocktailbar.R
-import com.tkachuk.cocktailbar.base.BaseViewModel
-import com.tkachuk.cocktailbar.database.DrinkRepository
+import com.tkachuk.cocktailbar.data.database.CallBack
+import com.tkachuk.cocktailbar.ui.base.BaseViewModel
+import com.tkachuk.cocktailbar.data.repository.DrinkRepository
 import com.tkachuk.cocktailbar.model.Drink
 import com.tkachuk.cocktailbar.model.Drinks
-import com.tkachuk.cocktailbar.network.DrinkApi
+import com.tkachuk.cocktailbar.network.Api
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class DrinkListViewModel : BaseViewModel() {
+class DrinkListViewModel(val context: Context) : BaseViewModel() {
 
     @Inject
-    lateinit var drinkApi: DrinkApi
+    lateinit var api: Api
 
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
 
     val drinkListAdapter: DrinkListAdapter = DrinkListAdapter(this)
+    private val drinkRepository = DrinkRepository(api, context)
 
     private var drinkList: MutableList<Drink> = mutableListOf()
     var clickedDrinkId: MutableLiveData<Int> = MutableLiveData()
@@ -32,15 +35,10 @@ class DrinkListViewModel : BaseViewModel() {
     private var subscription: Disposable? = null
 
     val errorMessage: MutableLiveData<Int> = MutableLiveData()
-    val errorClickListener = View.OnClickListener { loadRandom10Drink(false) }
-
-    init {
-       // loadRandom10Drink(false)
-    }
+    val errorClickListener = View.OnClickListener { loadRandomDrinks(false) }
 
     override fun onCleared() {
         super.onCleared()
-        Log.d("draxvel", "DrinkListViewModel - onCleared")
         subscription?.dispose()
         drinkList.clear()
         drinkListAdapter.clear()
@@ -48,35 +46,27 @@ class DrinkListViewModel : BaseViewModel() {
         errorMessage.value = null
     }
 
-    fun loadRandom10Drink(update: Boolean) {
-        subscription = drinkApi.getRandom()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { onRetrieveStart() }
-                .doOnError { onRetrieveDrinkError("Error") }
-                .doOnTerminate { onRetrieveFinish() }
-                .subscribe(
-                        //Add result
-                        { result ->
-                            if (count < 5) {
-                                if (drinkList.contains(result.drinks[0])) {
-                                    loadRandom10Drink(update)
-                                } else {
-                                    drinkList.add(result.drinks[0])
-                                    count++
-                                }
-                                loadRandom10Drink(update)
-                            } else {
-                                onRetrieveDrinkSuccess(update)
-                                count = 0
-                            }
-                        },
-                        { msg -> onRetrieveDrinkError(msg.localizedMessage.toString()) }
-                )
+    fun loadRandomDrinks(update: Boolean) {
+
+        onRetrieveStart()
+
+        drinkRepository.getDrinks(loadingMainCallBack = object : CallBack.LoadingMainCallBack {
+            override fun onLoad(list: Observable<List<Drink>>) {
+                list.subscribe {
+                    onRetrieveDrinkSuccess(it, update)
+                    onRetrieveFinish()
+                }
+            }
+
+            override fun onError(msg: String) {
+                onRetrieveDrinkError(msg)
+            }
+        })
     }
 
+
     fun searchCocktails(str: String) {
-        subscription = drinkApi.searchCocktails(str)
+        subscription = api.searchCocktails(str)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { onRetrieveStart() }
@@ -89,7 +79,7 @@ class DrinkListViewModel : BaseViewModel() {
     }
 
     fun searchByIngredient(str: String) {
-        subscription = drinkApi.searchByIngredient(str)
+        subscription = api.searchByIngredient(str)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { onRetrieveStart() }
@@ -110,45 +100,22 @@ class DrinkListViewModel : BaseViewModel() {
         setVisible(false)
     }
 
-    private fun onRetrieveDrinkSuccess(update: Boolean) {
+    private fun onRetrieveDrinkSuccess(drinks: List<Drink>, update: Boolean) {
         if (update) {
-            drinkListAdapter.updateList(drinkList)
+            drinkListAdapter.updateList(drinks.toMutableList())
         } else {
-            drinkListAdapter.addToList(drinkList)
+            drinkListAdapter.addToList(drinks.toMutableList())
         }
-        drinkList = mutableListOf()
+        drinkList = drinks.toMutableList()
         count = 0
-    }
-
-    private fun onRetrieveDrinkSuccess(result: Drinks, update: Boolean) {
-        Log.d("draxvel drink", "success")
-
-        if (drinkList.size < 10) {
-            if (drinkList.contains(result.drinks[0])) {
-                loadRandom10Drink(update)
-            } else {
-                drinkList.add(result.drinks[0])
-            }
-            loadRandom10Drink(update)
-        } else {
-
-            if (update) {
-                drinkListAdapter.updateList(drinkList)
-            } else {
-                drinkListAdapter.addToList(drinkList)
-            }
-            drinkList.clear()
-        }
     }
 
     private fun onRetrieveDrinkError(msg: String) {
         errorMessage.value = R.string.loading_error
         setVisible(false)
-        Log.d("draxvel drink", "error + " + msg)
     }
 
     private fun onSearchDrinkSuccess(result: Drinks) {
-        Log.d("draxvel search - ", result.toString())
         drinkListAdapter.updateList(result.drinks)
         drinkList = mutableListOf()
         count = 0
@@ -168,7 +135,7 @@ class DrinkListViewModel : BaseViewModel() {
     }
 
     fun loadFilteredDrinks(s: String) {
-        subscription = drinkApi.getFilteredList(s)
+        subscription = api.getFilteredList(s)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { onRetrieveStart() }
@@ -184,11 +151,10 @@ class DrinkListViewModel : BaseViewModel() {
         drinkListAdapter.updateList(result.drinks)
     }
 
-    fun loadFavorites(application: Application):Boolean {
-        val repo = DrinkRepository(application)
-        if(repo.drinkList.isNotEmpty()){
-            drinkListAdapter.updateList(repo.drinkList)
+    fun loadFavorites(application: Application): Boolean {
+//        if (drinkRepository.drinkList.isNotEmpty()) {
+//            drinkListAdapter.updateList(repo.drinkList)
             return true
-        }else return false
+//        } else return false
     }
 }

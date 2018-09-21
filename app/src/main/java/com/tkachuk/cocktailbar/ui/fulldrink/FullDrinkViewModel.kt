@@ -6,11 +6,11 @@ import android.arch.lifecycle.Observer
 import android.util.Log
 import android.view.View
 import com.tkachuk.cocktailbar.R
-import com.tkachuk.cocktailbar.base.BaseViewModel
-import com.tkachuk.cocktailbar.database.DrinkRepository
+import com.tkachuk.cocktailbar.ui.base.BaseViewModel
+import com.tkachuk.cocktailbar.data.repository.DrinkRepository
 import com.tkachuk.cocktailbar.model.Drink
 import com.tkachuk.cocktailbar.model.Ingredient
-import com.tkachuk.cocktailbar.network.DrinkApi
+import com.tkachuk.cocktailbar.network.Api
 import com.tkachuk.cocktailbar.ui.fulldrink.ingredients.IngredientPhotoListAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
 
     @Inject
-    lateinit var drinkApi: DrinkApi
+    lateinit var api: Api
     private lateinit var subscription: Disposable
 
     private lateinit var currentDrink: Drink
@@ -49,7 +49,7 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
         strGlass.value = "Glass: " + drink.strGlass
         strInstructions.value = drink.strInstructions
 
-        val repo = DrinkRepository(application)
+        val repo = DrinkRepository(api, activity.applicationContext)
         drinkIsFavorite.value = !repo.isDrinkInDatabase(currentDrink.idDrink)
 
         val tempList: MutableList<Ingredient> = mutableListOf()
@@ -93,7 +93,7 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
     }
 
     fun loadRecipe(id: Int, application: Application) {
-        subscription = drinkApi.getFullCocktailRecipe(id)
+        subscription = api.getFullCocktailRecipe(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { onRetrieveRecipeStart() }
@@ -139,14 +139,14 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
     }
 
     fun insertDrink( application: Application){
-        val repo = DrinkRepository(application)
+        val repo = DrinkRepository(api, application)
         Log.d("draxvel", "insert: "+currentDrink.strDrink)
 
         repo.insert(currentDrink)
     }
 
     fun deleteDrink(application: Application) {
-        val repo = DrinkRepository(application)
+        val repo = DrinkRepository(api, application)
         Log.d("draxvel", "delete: "+currentDrink.strDrink)
         repo.delete(currentDrink)
     }
