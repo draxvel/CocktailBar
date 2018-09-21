@@ -78,14 +78,25 @@ class DrinkRepository(val api: Api, val context: Context) : BaseRepositoryModel(
     }
 
     fun searchByIngredient(str: String, loadingMainCallBack: CallBack.LoadingMainCallBack) {
-        api.searchByIngredient(str)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .debounce(TIMEOUT_FOR_LOADING, TimeUnit.SECONDS)
-                .subscribe(
-                        { result -> loadingMainCallBack.onLoad(Observable.fromArray(result.drinks)) },
-                        { msg -> loadingMainCallBack.onError(msg.localizedMessage?:"Error") }
-                )
+        if (!isNetworkConnected(context)) {
+            drinkDao.searchByIngredient(str)
+                    .filter { it.isNotEmpty() }
+                    .toObservable()
+                    .debounce(TIMEOUT_FOR_LOADING, TimeUnit.SECONDS)
+                    .subscribe(
+                            { result -> loadingMainCallBack.onLoad(Observable.fromArray(result)) },
+                            { msg -> loadingMainCallBack.onError(msg.localizedMessage ?: "Error") }
+                    )
+        } else {
+            api.searchByIngredient(str)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .debounce(TIMEOUT_FOR_LOADING, TimeUnit.SECONDS)
+                    .subscribe(
+                            { result -> loadingMainCallBack.onLoad(Observable.fromArray(result.drinks)) },
+                            { msg -> loadingMainCallBack.onError(msg.localizedMessage ?: "Error") }
+                    )
+        }
     }
 
     fun loadFilteredDrinks(str: String, loadingMainCallBack: CallBack.LoadingMainCallBack) {

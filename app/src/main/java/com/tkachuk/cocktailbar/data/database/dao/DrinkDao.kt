@@ -13,6 +13,11 @@ interface DrinkDao {
     @Query("SELECT * from drink where strDrink LIKE :str")
     fun searchCocktails(str: String): Single<List<Drink>>
 
+    @Query("SELECT * from drink where strIngredient1 == :str or strIngredient2 == :str or strIngredient3 == :str " +
+            "or strIngredient4 == :str or strIngredient5 == :str or strIngredient6 == :str or strIngredient7 == :str " +
+            "or strIngredient8 == :str or strIngredient8 == :str or strIngredient9 == :str or strIngredient10 == :str ")
+    fun searchByIngredient(str: String): Single<List<Drink>>
+
     @Query("SELECT * from drink where strCategory == :str")
     fun getFilteredList(str: String): Single<List<Drink>>
 
