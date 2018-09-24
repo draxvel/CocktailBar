@@ -21,15 +21,18 @@ interface DrinkDao {
     @Query("SELECT * from drink where strCategory == :str")
     fun getFilteredList(str: String): Single<List<Drink>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Query("SELECT * from drink where favorite == 1")
+    fun loadFavorites(): Single<List<Drink>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(drink: Drink)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(drink: List<Drink>)
 
     @Delete
     fun delete(drink: Drink)
 
     @Query("SELECT * from drink where idDrink = :id")
-    fun isDrinkInDatabase(id: Int): Drink?
+    fun getDrinkById(id: Int): Drink?
 }

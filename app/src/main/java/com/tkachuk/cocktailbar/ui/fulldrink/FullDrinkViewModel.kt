@@ -40,7 +40,7 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
 
     val drinkIsFavorite = MutableLiveData<Boolean>()
 
-    fun bind(drink: Drink, application: Application) {
+    fun bind(drink: Drink) {
         currentDrink = drink
         drinkName.value = drink.strDrink
         drinkThumb.value = drink.strDrinkThumb
@@ -50,7 +50,7 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
         strInstructions.value = drink.strInstructions
 
         val repo = DrinkRepository(activity.applicationContext)
-        drinkIsFavorite.value = !repo.isDrinkInDatabase(currentDrink.idDrink)
+        drinkIsFavorite.value = repo.isDrinkFavorite(currentDrink.idDrink)
 
         val tempList: MutableList<Ingredient> = mutableListOf()
 
@@ -101,7 +101,7 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
                 .subscribe(
                         //Add result
                         { result ->
-                            onRetrieveRecipeSuccess(result.drinks, application)
+                            onRetrieveRecipeSuccess(result.drinks)
                         },
                         { msg -> onRetrieveRecipeError(msg) }
                 )
@@ -118,9 +118,9 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
         setVisible(false)
     }
 
-    private fun onRetrieveRecipeSuccess(drinks: List<Drink>, application: Application) {
+    private fun onRetrieveRecipeSuccess(drinks: List<Drink>) {
         Log.d("draxvel", "onRetrieveRecipeSuccess")
-        bind(drinks[0], application)
+        bind(drinks[0])
     }
 
     private fun onRetrieveRecipeError(msg: Throwable) {
@@ -141,7 +141,7 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
     fun insertDrink( application: Application){
         val repo = DrinkRepository(application)
         Log.d("draxvel", "insert: "+currentDrink.strDrink)
-
+        currentDrink.favorite = true
         repo.insert(currentDrink)
     }
 

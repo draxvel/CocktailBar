@@ -125,6 +125,17 @@ class DrinkRepository(val context: Context) : BaseRepositoryModel() {
         }
     }
 
+    fun loadFavorites(loadingMainCallBack: CallBack.LoadingMainCallBack) {
+        drinkDao.loadFavorites()
+                .filter { it.isNotEmpty() }
+                .toObservable()
+                .debounce(TIMEOUT_FOR_LOADING, TimeUnit.SECONDS)
+                .subscribe(
+                        { result -> loadingMainCallBack.onLoad(Observable.fromArray(result)) },
+                        { msg -> loadingMainCallBack.onError(msg.localizedMessage ?: "Error") }
+                )
+    }
+
     private fun getDrinksFromBD(loadingDBCallBack: CallBack.LoadingDBCallBack) {
         drinkDao.getDrinks()
                 .filter { it.isNotEmpty() }
@@ -199,8 +210,8 @@ class DrinkRepository(val context: Context) : BaseRepositoryModel() {
         drinkDao.delete(drink)
     }
 
-    fun isDrinkInDatabase(id: Int): Boolean {
-        return drinkDao.isDrinkInDatabase(id) == null
+    fun isDrinkFavorite(id: Int): Boolean {
+        return drinkDao.getDrinkById(id) != null && drinkDao.getDrinkById(id)?.favorite == true
     }
 
     class InsertTask(drinkDao: DrinkDao) : AsyncTask<Drink, Void, Void>() {

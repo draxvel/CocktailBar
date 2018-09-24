@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.*
 import com.bumptech.glide.Glide
 import com.tkachuk.cocktailbar.R
+import com.tkachuk.cocktailbar.data.repository.DrinkRepository
 import com.tkachuk.cocktailbar.databinding.FragmentMainBinding
 import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
 import com.tkachuk.cocktailbar.ui.fulldrink.FullDrinkActivity
@@ -54,7 +55,7 @@ class MainFragment : Fragment() {
             if (errorMessage != null) showError(errorMessage, ingredientsListViewModel.errorClickListener) else hideError()
         })
 
-        drinkListViewModel = DrinkListViewModel(activity!!.applicationContext)
+        drinkListViewModel = DrinkListViewModel(DrinkRepository(activity!!.applicationContext))
         drinkListViewModel.loadRandomDrinks(false)
         drinkListViewModel.errorMessage.observe(this, Observer { errorMessage ->
             if (errorMessage != null) showError(errorMessage, drinkListViewModel.errorClickListener) else hideError()

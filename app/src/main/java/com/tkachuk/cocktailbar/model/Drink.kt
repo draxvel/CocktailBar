@@ -19,6 +19,8 @@ data class Drink(
         val strInstructions: String,
         val strDrinkThumb: String,
 
+        var favorite: Boolean = false,
+
         val strIngredient1: String,
         val strIngredient2: String,
         val strIngredient3: String,

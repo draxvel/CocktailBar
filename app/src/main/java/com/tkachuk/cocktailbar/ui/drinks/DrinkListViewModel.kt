@@ -1,8 +1,6 @@
 package com.tkachuk.cocktailbar.ui.drinks
 
-import android.app.Application
 import android.arch.lifecycle.MutableLiveData
-import android.content.Context
 import android.view.View
 import com.tkachuk.cocktailbar.R
 import com.tkachuk.cocktailbar.data.database.CallBack
@@ -12,12 +10,11 @@ import com.tkachuk.cocktailbar.model.Drink
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 
-class DrinkListViewModel(val context: Context) : BaseViewModel() {
+class DrinkListViewModel(private val drinkRepository: DrinkRepository) : BaseViewModel() {
 
     val loadingVisibility: MutableLiveData<Int> = MutableLiveData()
 
     val drinkListAdapter: DrinkListAdapter = DrinkListAdapter(this)
-    private val drinkRepository = DrinkRepository(context)
 
     var clickedDrinkId: MutableLiveData<Int> = MutableLiveData()
 
@@ -102,6 +99,25 @@ class DrinkListViewModel(val context: Context) : BaseViewModel() {
         })
     }
 
+    fun loadFavorites(): Boolean {
+        var isSuccess = true
+        drinkRepository.loadFavorites(loadingMainCallBack = object : CallBack.LoadingMainCallBack{
+
+            override fun onLoad(list: Observable<List<Drink>>) {
+                list.subscribe {
+                    onRetrieveDrinkSuccess(it, true)
+                    isSuccess = true
+                }
+            }
+
+            override fun onError(msg: String) {
+                isSuccess = true
+            }
+        })
+
+        return isSuccess
+    }
+
     private fun onRetrieveStart() {
         setVisible(true)
         errorMessage.value = null
@@ -135,12 +151,5 @@ class DrinkListViewModel(val context: Context) : BaseViewModel() {
         } else {
             loadingVisibility.value = View.GONE
         }
-    }
-
-    fun loadFavorites(application: Application): Boolean {
-//        if (drinkRepository.drinkList.isNotEmpty()) {
-//            drinkListAdapter.updateList(repo.drinkList)
-            return true
-//        } else return false
     }
 }

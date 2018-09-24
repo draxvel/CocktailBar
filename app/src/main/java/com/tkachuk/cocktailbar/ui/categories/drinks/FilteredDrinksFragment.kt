@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.*
 import com.tkachuk.cocktailbar.R
+import com.tkachuk.cocktailbar.data.repository.DrinkRepository
 import com.tkachuk.cocktailbar.databinding.FragmentFilteredDrinksBinding
 import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
 import com.tkachuk.cocktailbar.ui.fulldrink.FullDrinkActivity
@@ -51,7 +52,7 @@ class FilteredDrinksFragment : Fragment() {
             fragmentManager?.popBackStack()
         }
 
-        drinkListViewModel = DrinkListViewModel(getActivity()!!.applicationContext)
+        drinkListViewModel = DrinkListViewModel(DrinkRepository(activity!!.applicationContext))
         val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         binding.drinkList.layoutManager = linearLayoutManager
 
