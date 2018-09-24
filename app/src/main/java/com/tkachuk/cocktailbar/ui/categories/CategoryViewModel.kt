@@ -1,20 +1,24 @@
 package com.tkachuk.cocktailbar.ui.categories
 
 import android.arch.lifecycle.MutableLiveData
+import android.content.Context
+import com.tkachuk.cocktailbar.data.database.CallBack
+import com.tkachuk.cocktailbar.data.repository.DrinkRepository
 import com.tkachuk.cocktailbar.ui.base.BaseViewModel
 import com.tkachuk.cocktailbar.model.Category
+import com.tkachuk.cocktailbar.model.Drink
 import com.tkachuk.cocktailbar.network.Api
 import com.tkachuk.cocktailbar.util.extension.random
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class CategoryViewModel: BaseViewModel() {
+class CategoryViewModel(context: Context) : BaseViewModel() {
 
     @Inject
     lateinit var api: Api
     private lateinit var subscription: Disposable
+    private val repo = DrinkRepository(context)
 
     private val categoryName = MutableLiveData<String>()
     private val categoryImage = MutableLiveData<String>()
@@ -32,17 +36,22 @@ class CategoryViewModel: BaseViewModel() {
         return categoryImage
     }
 
-    private fun loadPhotoPreviewForCategory(s: String){
-        subscription = api.getFilteredList(s)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe ({ result ->
-                    val random = (0 until result.drinks.size).random()
-                    onLoadPhotoPreviewForCategory(result.drinks[random].strDrinkThumb)},
-                        {})
+    private fun loadPhotoPreviewForCategory(s: String) {
+        repo.loadFilteredDrinks(s, loadingMainCallBack = object : CallBack.LoadingMainCallBack {
+
+            override fun onLoad(list: Observable<List<Drink>>) {
+                list.subscribe {
+                    val random = (0 until it.size).random()
+                    onLoadPhotoPreviewForCategory(it[random].strDrinkThumb)
+                }
+            }
+
+            override fun onError(msg: String) {
+            }
+        })
     }
 
-    private fun onLoadPhotoPreviewForCategory(s: String){
+    private fun onLoadPhotoPreviewForCategory(s: String) {
         categoryImage.value = s
     }
 

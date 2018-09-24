@@ -43,7 +43,7 @@ class CategoryListAdapter(private val iMainActivity: IMainActivity) : RecyclerVi
     }
 
     class ViewHolder(private val binding: ItemCategoryBinding) : RecyclerView.ViewHolder(binding.root) {
-        private val viewModel = CategoryViewModel()
+        private val viewModel = CategoryViewModel(itemView.context)
 
         fun bind(category: Category) {
             viewModel.bind(category)
