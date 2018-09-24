@@ -2,7 +2,6 @@ package com.tkachuk.cocktailbar.ui.fulldrink
 
 import android.app.Application
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Observer
 import android.util.Log
 import android.view.View
 import com.tkachuk.cocktailbar.R
@@ -16,7 +15,7 @@ import com.tkachuk.cocktailbar.ui.fulldrink.ingredients.IngredientPhotoListAdapt
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
-class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
+class FullDrinkViewModel(private val repo: DrinkRepository) : BaseViewModel() {
 
     @Inject
     lateinit var api: Api
@@ -39,6 +38,8 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
 
     val drinkIsFavorite = MutableLiveData<Boolean>()
 
+    var tempList: MutableList<Ingredient> = mutableListOf()
+
     fun bind(drink: Drink) {
         currentDrink = drink
         drinkName.value = drink.strDrink
@@ -48,10 +49,9 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
         strGlass.value = "Glass: " + drink.strGlass
         strInstructions.value = drink.strInstructions
 
-        val repo = DrinkRepository(activity.applicationContext)
         drinkIsFavorite.value = repo.isDrinkFavorite(currentDrink.idDrink)
 
-        val tempList: MutableList<Ingredient> = mutableListOf()
+        tempList = mutableListOf()
 
         val fields = drink.javaClass.declaredFields
 
@@ -80,10 +80,10 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
         }
 
         ingredientPhotoListAdapter.setList(tempList, false)
+    }
 
-        clickedPhotoIngredient.observe(activity, Observer { value ->
-            ingredientPhotoListAdapter.setList(tempList, value!!)
-        })
+    fun setListToIngredientAdapter(value: Boolean) {
+        ingredientPhotoListAdapter.setList(tempList, value)
     }
 
     override fun onCleared() {
