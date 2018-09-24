@@ -33,6 +33,7 @@ class DrinkRepository(val context: Context) : BaseRepositoryModel() {
     fun getDrinks(loadingMainCallBack: CallBack.LoadingMainCallBack) {
 
         main = loadingMainCallBack
+        counter = 0
 
         if (!isNetworkConnected(context)) {
 
@@ -166,20 +167,20 @@ class DrinkRepository(val context: Context) : BaseRepositoryModel() {
                 .toObservable()
                 .debounce(TIMEOUT_FOR_LOADING, TimeUnit.SECONDS)
                 .subscribe({ result ->
-                    val random = (0 until result.size).random()
-                    if (counter < COUNT_OF_DRINKS_FOR_GETTING_RANDOM) {
-                        if (tempDrinkList.contains(result[random])) {
-                            getDrinksFromBD(loadingDBCallBack)
-                        } else {
+
+                    while (counter< COUNT_OF_DRINKS_FOR_GETTING_RANDOM){
+
+                        val random = (0 until result.size).random()
+
+                        if (!tempDrinkList.contains(result[random])) {
                             tempDrinkList.add(result[random])
                             counter++
                         }
-                        getDrinksFromBD(loadingDBCallBack)
-                    } else {
-                        loadingDBCallBack.onLoad(tempDrinkList)
-                        counter = 0
-                        tempDrinkList.clear()
                     }
+
+                    loadingDBCallBack.onLoad(tempDrinkList)
+                    counter = 0
+                    tempDrinkList.clear()
                 },
                         { e ->
                             loadingDBCallBack.onError(e.localizedMessage ?: "Error")
