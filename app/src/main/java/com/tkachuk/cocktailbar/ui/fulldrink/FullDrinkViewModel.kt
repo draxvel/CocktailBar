@@ -143,6 +143,6 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
     fun deleteDrink(application: Application) {
         val repo = DrinkRepository(application)
         Log.d("draxvel", "delete: " + currentDrink.strDrink)
-        repo.delete(currentDrink)
+        repo.deleteFromFavorites(currentDrink.idDrink)
     }
 }
