@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.*
 import com.bumptech.glide.Glide
 import com.tkachuk.cocktailbar.R
+import com.tkachuk.cocktailbar.data.repository.DrinkRepository
 import com.tkachuk.cocktailbar.databinding.FragmentMainBinding
 import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
 import com.tkachuk.cocktailbar.ui.fulldrink.FullDrinkActivity
@@ -54,8 +55,8 @@ class MainFragment : Fragment() {
             if (errorMessage != null) showError(errorMessage, ingredientsListViewModel.errorClickListener) else hideError()
         })
 
-        drinkListViewModel = ViewModelProviders.of(this).get(DrinkListViewModel::class.java)
-        drinkListViewModel.loadRandom10Drink(false)
+        drinkListViewModel = DrinkListViewModel(DrinkRepository(activity!!.applicationContext))
+        drinkListViewModel.loadRandomDrinks(false)
         drinkListViewModel.errorMessage.observe(this, Observer { errorMessage ->
             if (errorMessage != null) showError(errorMessage, drinkListViewModel.errorClickListener) else hideError()
         })
@@ -79,7 +80,7 @@ class MainFragment : Fragment() {
 
         binding?.drinkList?.clearOnScrollListeners()
         binding?.drinkList?.addOnScrollListener(InfiniteScrollListener(
-                { drinkListViewModel.loadRandom10Drink(false) },
+                { drinkListViewModel.loadRandomDrinks(false) },
                 linearLayoutManager))
 
         binding?.drinkListViewModel = drinkListViewModel
@@ -87,10 +88,10 @@ class MainFragment : Fragment() {
         binding?.swipeRefreshLayout?.setOnRefreshListener {
             ingredientsListViewModel.loadIngredients(true)
             searchView?.isIconified = true
-            drinkListViewModel.loadRandom10Drink(true)
+            drinkListViewModel.loadRandomDrinks(true)
             binding?.drinkList?.clearOnScrollListeners()
             binding?.drinkList?.addOnScrollListener(InfiniteScrollListener(
-                    { drinkListViewModel.loadRandom10Drink(false) },
+                    { drinkListViewModel.loadRandomDrinks(false) },
                     linearLayoutManager))
             binding?.drinkList?.smoothScrollToPosition(0)
         }
@@ -140,11 +141,11 @@ class MainFragment : Fragment() {
         Glide.get(context).clearMemory()
         System.gc()
         binding = null
-        binding?.swipeRefreshLayout?.setOnRefreshListener (null)
+        binding?.swipeRefreshLayout?.setOnRefreshListener(null)
     }
 
     override fun onDestroyOptionsMenu() {
         super.onDestroyOptionsMenu()
-            searchView?.setOnQueryTextListener(null)
+        searchView?.setOnQueryTextListener(null)
     }
 }

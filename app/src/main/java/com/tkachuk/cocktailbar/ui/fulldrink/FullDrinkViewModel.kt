@@ -6,21 +6,20 @@ import android.arch.lifecycle.Observer
 import android.util.Log
 import android.view.View
 import com.tkachuk.cocktailbar.R
-import com.tkachuk.cocktailbar.base.BaseViewModel
-import com.tkachuk.cocktailbar.database.DrinkRepository
+import com.tkachuk.cocktailbar.data.database.CallBack
+import com.tkachuk.cocktailbar.ui.base.BaseViewModel
+import com.tkachuk.cocktailbar.data.repository.DrinkRepository
 import com.tkachuk.cocktailbar.model.Drink
 import com.tkachuk.cocktailbar.model.Ingredient
-import com.tkachuk.cocktailbar.network.DrinkApi
+import com.tkachuk.cocktailbar.network.Api
 import com.tkachuk.cocktailbar.ui.fulldrink.ingredients.IngredientPhotoListAdapter
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
 
     @Inject
-    lateinit var drinkApi: DrinkApi
+    lateinit var api: Api
     private lateinit var subscription: Disposable
 
     private lateinit var currentDrink: Drink
@@ -40,7 +39,7 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
 
     val drinkIsFavorite = MutableLiveData<Boolean>()
 
-    fun bind(drink: Drink, application: Application) {
+    fun bind(drink: Drink) {
         currentDrink = drink
         drinkName.value = drink.strDrink
         drinkThumb.value = drink.strDrinkThumb
@@ -49,8 +48,8 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
         strGlass.value = "Glass: " + drink.strGlass
         strInstructions.value = drink.strInstructions
 
-        val repo = DrinkRepository(application)
-        drinkIsFavorite.value = !repo.isDrinkInDatabase(currentDrink.idDrink)
+        val repo = DrinkRepository(activity.applicationContext)
+        drinkIsFavorite.value = repo.isDrinkFavorite(currentDrink.idDrink)
 
         val tempList: MutableList<Ingredient> = mutableListOf()
 
@@ -82,8 +81,8 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
 
         ingredientPhotoListAdapter.setList(tempList, false)
 
-        clickedPhotoIngredient.observe(activity, Observer {
-            value-> ingredientPhotoListAdapter.setList(tempList, value!!)
+        clickedPhotoIngredient.observe(activity, Observer { value ->
+            ingredientPhotoListAdapter.setList(tempList, value!!)
         })
     }
 
@@ -93,18 +92,19 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
     }
 
     fun loadRecipe(id: Int, application: Application) {
-        subscription = drinkApi.getFullCocktailRecipe(id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { onRetrieveRecipeStart() }
-                .doOnTerminate { onRetrieveRecipeStop() }
-                .subscribe(
-                        //Add result
-                        { result ->
-                            onRetrieveRecipeSuccess(result.drinks, application)
-                        },
-                        { msg -> onRetrieveRecipeError(msg) }
-                )
+        val repository = DrinkRepository(application)
+        onRetrieveRecipeStart()
+        repository.getSingleDrinkById(id, loadingSingleDrinkCallBack = object : CallBack.LoadingSingleDrinkCallBack {
+            override fun onLoad(drink: Drink) {
+                bind(drink)
+                onRetrieveRecipeStop()
+            }
+
+            override fun onError(msg: String) {
+                onRetrieveRecipeError(msg)
+                onRetrieveRecipeStop()
+            }
+        })
     }
 
     private fun onRetrieveRecipeStart() {
@@ -118,16 +118,11 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
         setVisible(false)
     }
 
-    private fun onRetrieveRecipeSuccess(drinks: List<Drink>, application: Application) {
-        Log.d("draxvel", "onRetrieveRecipeSuccess")
-        bind(drinks[0], application)
-    }
-
-    private fun onRetrieveRecipeError(msg: Throwable) {
+    private fun onRetrieveRecipeError(msg: String) {
         Log.d("draxvel", "onRetrieveRecipeError")
         errorMessage.value = R.string.loading_error
         setVisible(false)
-        Log.d("draxvel", "msg: " + msg.localizedMessage.toString())
+        Log.d("draxvel", "msg: " + msg)
     }
 
     private fun setVisible(visible: Boolean) {
@@ -138,16 +133,16 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
         }
     }
 
-    fun insertDrink( application: Application){
+    fun insertDrink(application: Application) {
         val repo = DrinkRepository(application)
-        Log.d("draxvel", "insert: "+currentDrink.strDrink)
-
+        Log.d("draxvel", "insert: " + currentDrink.strDrink)
+        currentDrink.favorite = true
         repo.insert(currentDrink)
     }
 
     fun deleteDrink(application: Application) {
         val repo = DrinkRepository(application)
-        Log.d("draxvel", "delete: "+currentDrink.strDrink)
+        Log.d("draxvel", "delete: " + currentDrink.strDrink)
         repo.delete(currentDrink)
     }
 }

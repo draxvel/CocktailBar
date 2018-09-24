@@ -5,7 +5,7 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import android.support.annotation.NonNull
 
-@Entity(tableName = "drinks")
+@Entity(tableName = "drink")
 data class Drink(
 
         @PrimaryKey
@@ -18,6 +18,8 @@ data class Drink(
         val strGlass: String,
         val strInstructions: String,
         val strDrinkThumb: String,
+
+        var favorite: Boolean = false,
 
         val strIngredient1: String,
         val strIngredient2: String,

@@ -53,12 +53,12 @@ class FullDrinkActivity : AppCompatActivity() {
         })
         binding.recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
-        fullDrinkViewModel.drinkIsFavorite.observe(this, Observer { isFavorite->
-            if(isFavorite!!){
+        fullDrinkViewModel.drinkIsFavorite.observe(this, Observer { isFavorite ->
+            if (isFavorite!!) {
                 menuItem?.icon = ContextCompat.getDrawable(this, R.mipmap.ic_fav)
 
-            }else {
-                menuItem?.icon =  ContextCompat.getDrawable(this, R.mipmap.ic_fav_border)
+            } else {
+                menuItem?.icon = ContextCompat.getDrawable(this, R.mipmap.ic_fav_border)
             }
         })
     }
@@ -79,15 +79,14 @@ class FullDrinkActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if(item?.itemId == R.id.favorite_item){
+        if (item?.itemId == R.id.favorite_item) {
             Log.d("draxvel", "onclick")
 
-            if(fullDrinkViewModel.drinkIsFavorite.value==false)
-            {
+            if (fullDrinkViewModel.drinkIsFavorite.value == false) {
                 Log.d("draxvel", "icon has border, replace!")
                 fullDrinkViewModel.insertDrink(this.application)
                 fullDrinkViewModel.drinkIsFavorite.value = true
-            }else{
+            } else {
                 fullDrinkViewModel.deleteDrink(this.application)
                 Log.d("draxvel", "icon fav, replace!")
                 fullDrinkViewModel.drinkIsFavorite.value = false

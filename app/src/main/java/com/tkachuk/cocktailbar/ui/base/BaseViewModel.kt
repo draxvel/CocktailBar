@@ -1,4 +1,4 @@
-package com.tkachuk.cocktailbar.base
+package com.tkachuk.cocktailbar.ui.base
 
 import android.arch.lifecycle.ViewModel
 import com.tkachuk.cocktailbar.injection.component.DaggerViewModelInjector

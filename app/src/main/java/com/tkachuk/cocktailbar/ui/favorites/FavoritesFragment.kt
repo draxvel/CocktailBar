@@ -1,7 +1,6 @@
 package com.tkachuk.cocktailbar.ui.favorites
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -12,13 +11,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.tkachuk.cocktailbar.R
+import com.tkachuk.cocktailbar.data.repository.DrinkRepository
 import com.tkachuk.cocktailbar.databinding.FragmentFavoritesBinding
-import com.tkachuk.cocktailbar.model.Drink
 import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
 import com.tkachuk.cocktailbar.ui.fulldrink.FullDrinkActivity
 import com.tkachuk.cocktailbar.ui.main.IMainActivity
 
-class FavoritesFragment: Fragment() {
+class FavoritesFragment : Fragment() {
 
     private lateinit var root: View
     private lateinit var binding: FragmentFavoritesBinding
@@ -33,7 +32,7 @@ class FavoritesFragment: Fragment() {
         iMainActivity = activity as IMainActivity
         iMainActivity.setMainToolbar()
 
-        drinkListViewModel = ViewModelProviders.of(this).get(DrinkListViewModel::class.java)
+        drinkListViewModel = DrinkListViewModel(DrinkRepository(activity!!.applicationContext))
         val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         binding.drinkList.layoutManager = linearLayoutManager
 
@@ -55,10 +54,10 @@ class FavoritesFragment: Fragment() {
         setList()
     }
 
-    private fun setList(){
+    private fun setList() {
         binding.drinkList.visibility = View.INVISIBLE
 
-        if(drinkListViewModel.loadFavorites(activity!!.application)){
+        if (drinkListViewModel.loadFavorites()) {
             binding.drinkList.visibility = View.VISIBLE
         }
     }

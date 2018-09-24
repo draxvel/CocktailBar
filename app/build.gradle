@@ -75,4 +75,8 @@ dependencies {
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
     // Optional, if you use support library fragments:
     debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.1'
+
+    //RxJava additional
+    implementation 'android.arch.persistence.room:rxjava2:1.1.1'
+
 }

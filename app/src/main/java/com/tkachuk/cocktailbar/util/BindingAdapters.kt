@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.tkachuk.cocktailbar.util.extension.getParentActivity
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -48,6 +49,7 @@ fun setMutableImage(view: ImageView, url: MutableLiveData<String>?) {
             var requestOptions = RequestOptions()
             requestOptions = requestOptions.transforms(CenterCrop(), RoundedCorners(10))
             requestOptions.override(650, 650)
+            requestOptions.diskCacheStrategy(DiskCacheStrategy.ALL)
 
             Glide.with(parentActivity)
                     .load(value)
