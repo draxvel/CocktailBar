@@ -1,5 +1,6 @@
 package com.tkachuk.cocktailbar.data.database
 
+import com.tkachuk.cocktailbar.model.Category
 import com.tkachuk.cocktailbar.model.Drink
 import com.tkachuk.cocktailbar.model.Drinks
 import io.reactivex.Observable
@@ -24,5 +25,9 @@ interface CallBack {
 
     interface LoadingSingleDrinkCallBack : BaseCallback {
         fun onLoad(drink: Drink)
+    }
+
+    interface LoadCategoriesCallBack : BaseCallback {
+        fun onLoad(list: List<Category>)
     }
 }

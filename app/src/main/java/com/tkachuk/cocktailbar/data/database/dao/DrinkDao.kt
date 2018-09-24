@@ -38,4 +38,7 @@ interface DrinkDao {
 
     @Query("SELECT * from drink where idDrink = :id")
     fun getSingleDrinkById(id: Int): Single<Drink?>
+
+    @Query("UPDATE drink SET favorite = 0 where idDrink = :id")
+    fun deleteFromFavorites(id: Int)
 }

@@ -7,11 +7,11 @@ import android.arch.persistence.room.Query
 import com.tkachuk.cocktailbar.model.Category
 
 @Dao
-interface CategoryDao{
+interface CategoryDao {
 
-    //@get:Query("SELECT * from category")
-    val allCategories: List<Category>
+    @get:Query("SELECT * from category")
+    val allCategories: List<Category>?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(categoryList: List<Category>)
+    fun insertAll(categoryList: List<Category>)
 }

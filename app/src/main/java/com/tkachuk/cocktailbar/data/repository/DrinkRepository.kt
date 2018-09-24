@@ -235,6 +235,10 @@ class DrinkRepository(val context: Context) : BaseRepositoryModel() {
         drinkDao.delete(drink)
     }
 
+    fun deleteFromFavorites(id: Int) {
+        drinkDao.deleteFromFavorites(id)
+    }
+
     fun isDrinkFavorite(id: Int): Boolean {
         return drinkDao.getDrinkById(id) != null && drinkDao.getDrinkById(id)?.favorite == true
     }

@@ -1,5 +1,6 @@
 package com.tkachuk.cocktailbar.ui.base
 
+import com.tkachuk.cocktailbar.data.repository.CategoryRepository
 import com.tkachuk.cocktailbar.data.repository.DrinkRepository
 import com.tkachuk.cocktailbar.injection.component.DaggerRepositoryModelInjector
 import com.tkachuk.cocktailbar.injection.component.RepositoryModelInjector
@@ -21,6 +22,7 @@ abstract class BaseRepositoryModel {
     private fun inject() {
         when (this) {
             is DrinkRepository -> injector.inject(this)
+            is CategoryRepository -> injector.inject(this)
         }
     }
 }

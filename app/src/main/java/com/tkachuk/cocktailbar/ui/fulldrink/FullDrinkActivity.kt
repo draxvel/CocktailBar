@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import com.tkachuk.cocktailbar.data.repository.DrinkRepository
 import com.tkachuk.cocktailbar.databinding.ActivityFullDrinkBinding
 
 class FullDrinkActivity : AppCompatActivity() {
@@ -36,7 +37,7 @@ class FullDrinkActivity : AppCompatActivity() {
             finish()
         }
 
-        fullDrinkViewModel = FullDrinkViewModel(this)
+        fullDrinkViewModel = FullDrinkViewModel(DrinkRepository(this.applicationContext))
 
         val id = intent.getIntExtra("id", 1)
 
@@ -60,6 +61,10 @@ class FullDrinkActivity : AppCompatActivity() {
             } else {
                 menuItem?.icon = ContextCompat.getDrawable(this, R.mipmap.ic_fav_border)
             }
+        })
+
+        fullDrinkViewModel.clickedPhotoIngredient.observe(this, Observer { value ->
+            fullDrinkViewModel.setListToIngredientAdapter(value!!)
         })
     }
 
