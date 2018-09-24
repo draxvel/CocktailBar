@@ -6,15 +6,14 @@ import android.arch.lifecycle.Observer
 import android.util.Log
 import android.view.View
 import com.tkachuk.cocktailbar.R
+import com.tkachuk.cocktailbar.data.database.CallBack
 import com.tkachuk.cocktailbar.ui.base.BaseViewModel
 import com.tkachuk.cocktailbar.data.repository.DrinkRepository
 import com.tkachuk.cocktailbar.model.Drink
 import com.tkachuk.cocktailbar.model.Ingredient
 import com.tkachuk.cocktailbar.network.Api
 import com.tkachuk.cocktailbar.ui.fulldrink.ingredients.IngredientPhotoListAdapter
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
@@ -93,18 +92,19 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
     }
 
     fun loadRecipe(id: Int, application: Application) {
-        subscription = api.getFullCocktailRecipe(id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { onRetrieveRecipeStart() }
-                .doOnTerminate { onRetrieveRecipeStop() }
-                .subscribe(
-                        //Add result
-                        { result ->
-                            onRetrieveRecipeSuccess(result.drinks)
-                        },
-                        { msg -> onRetrieveRecipeError(msg) }
-                )
+        val repository = DrinkRepository(application)
+        onRetrieveRecipeStart()
+        repository.getSingleDrinkById(id, loadingSingleDrinkCallBack = object : CallBack.LoadingSingleDrinkCallBack{
+            override fun onLoad(drink: Drink) {
+                bind(drink)
+                onRetrieveRecipeStop()
+            }
+
+            override fun onError(msg: String) {
+                onRetrieveRecipeError(msg)
+                onRetrieveRecipeStop()
+            }
+        })
     }
 
     private fun onRetrieveRecipeStart() {
@@ -118,16 +118,11 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
         setVisible(false)
     }
 
-    private fun onRetrieveRecipeSuccess(drinks: List<Drink>) {
-        Log.d("draxvel", "onRetrieveRecipeSuccess")
-        bind(drinks[0])
-    }
-
-    private fun onRetrieveRecipeError(msg: Throwable) {
+    private fun onRetrieveRecipeError(msg: String) {
         Log.d("draxvel", "onRetrieveRecipeError")
         errorMessage.value = R.string.loading_error
         setVisible(false)
-        Log.d("draxvel", "msg: " + msg.localizedMessage.toString())
+        Log.d("draxvel", "msg: " + msg)
     }
 
     private fun setVisible(visible: Boolean) {
