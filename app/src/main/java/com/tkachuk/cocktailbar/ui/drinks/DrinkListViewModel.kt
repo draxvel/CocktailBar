@@ -51,13 +51,14 @@ class DrinkListViewModel(private val drinkRepository: DrinkRepository) : BaseVie
     //Main Fragment
     fun searchCocktails(str: String) {
         onRetrieveStart()
-        drinkRepository.searchCocktails(str, loadingMainCallBack = object : CallBack.LoadingMainCallBack{
+        drinkRepository.searchCocktails(str, loadingMainCallBack = object : CallBack.LoadingMainCallBack {
             override fun onLoad(list: Observable<List<Drink>>) {
                 list.subscribe {
                     onRetrieveDrinkSuccess(it, true)
                     onRetrieveFinish()
                 }
             }
+
             override fun onError(msg: String) {
                 onSearchDrinkError()
             }
@@ -67,7 +68,7 @@ class DrinkListViewModel(private val drinkRepository: DrinkRepository) : BaseVie
     //MainFragment
     fun searchByIngredient(str: String) {
         onRetrieveStart()
-        drinkRepository.searchByIngredient(str, loadingMainCallBack = object : CallBack.LoadingMainCallBack{
+        drinkRepository.searchByIngredient(str, loadingMainCallBack = object : CallBack.LoadingMainCallBack {
 
             override fun onLoad(list: Observable<List<Drink>>) {
                 list.subscribe {
@@ -77,14 +78,15 @@ class DrinkListViewModel(private val drinkRepository: DrinkRepository) : BaseVie
             }
 
             override fun onError(msg: String) {
-                onSearchDrinkError()            }
+                onSearchDrinkError()
+            }
 
         })
     }
 
     fun loadFilteredDrinks(str: String) {
         onRetrieveStart()
-        drinkRepository.loadFilteredDrinks(str, loadingMainCallBack = object : CallBack.LoadingMainCallBack{
+        drinkRepository.loadFilteredDrinks(str, loadingMainCallBack = object : CallBack.LoadingMainCallBack {
 
             override fun onLoad(list: Observable<List<Drink>>) {
                 list.subscribe {
@@ -101,7 +103,7 @@ class DrinkListViewModel(private val drinkRepository: DrinkRepository) : BaseVie
 
     fun loadFavorites(): Boolean {
         var isSuccess = true
-        drinkRepository.loadFavorites(loadingMainCallBack = object : CallBack.LoadingMainCallBack{
+        drinkRepository.loadFavorites(loadingMainCallBack = object : CallBack.LoadingMainCallBack {
 
             override fun onLoad(list: Observable<List<Drink>>) {
                 list.subscribe {

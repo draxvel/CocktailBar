@@ -141,11 +141,11 @@ class MainFragment : Fragment() {
         Glide.get(context).clearMemory()
         System.gc()
         binding = null
-        binding?.swipeRefreshLayout?.setOnRefreshListener (null)
+        binding?.swipeRefreshLayout?.setOnRefreshListener(null)
     }
 
     override fun onDestroyOptionsMenu() {
         super.onDestroyOptionsMenu()
-            searchView?.setOnQueryTextListener(null)
+        searchView?.setOnQueryTextListener(null)
     }
 }

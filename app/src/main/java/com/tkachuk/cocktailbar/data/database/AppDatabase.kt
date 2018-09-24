@@ -11,7 +11,7 @@ import com.tkachuk.cocktailbar.model.Ingredient
 
 //Category::class, Ingredient::class]
 @Database(entities = [Drink::class], version = 1)
-abstract class AppDatabase: RoomDatabase() {
+abstract class AppDatabase : RoomDatabase() {
     abstract val drinkDao: DrinkDao
     //abstract val categoryDao: CategoryDao
     //abstract val ingredientDao: IngredientDao
@@ -21,7 +21,7 @@ abstract class AppDatabase: RoomDatabase() {
         private var instance: RoomDatabase? = null
 
         fun getDatabase(context: Context): AppDatabase {
-            if(instance == null){
+            if (instance == null) {
                 instance = Room.databaseBuilder(context.applicationContext,
                         AppDatabase::class.java, "db")
                         .fallbackToDestructiveMigration()

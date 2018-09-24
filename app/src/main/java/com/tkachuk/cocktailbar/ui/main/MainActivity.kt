@@ -104,11 +104,11 @@ class MainActivity : AppCompatActivity(), IMainActivity {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.frame_layout)
 
         if (currentFragment is MainFragment || currentFragment is CategoryFragment
-        || currentFragment is FavoritesFragment || currentFragment is AboutFragment) {
+                || currentFragment is FavoritesFragment || currentFragment is AboutFragment) {
             this.doubleBackToExitPressedOnce = true
             Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
             Handler().postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
-        }else {
+        } else {
             super.onBackPressed()
         }
     }

@@ -17,7 +17,7 @@ import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
 import com.tkachuk.cocktailbar.ui.fulldrink.FullDrinkActivity
 import com.tkachuk.cocktailbar.ui.main.IMainActivity
 
-class FavoritesFragment: Fragment() {
+class FavoritesFragment : Fragment() {
 
     private lateinit var root: View
     private lateinit var binding: FragmentFavoritesBinding
@@ -54,10 +54,10 @@ class FavoritesFragment: Fragment() {
         setList()
     }
 
-    private fun setList(){
+    private fun setList() {
         binding.drinkList.visibility = View.INVISIBLE
 
-        if(drinkListViewModel.loadFavorites()){
+        if (drinkListViewModel.loadFavorites()) {
             binding.drinkList.visibility = View.VISIBLE
         }
     }

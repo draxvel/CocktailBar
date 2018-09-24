@@ -81,8 +81,8 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
 
         ingredientPhotoListAdapter.setList(tempList, false)
 
-        clickedPhotoIngredient.observe(activity, Observer {
-            value-> ingredientPhotoListAdapter.setList(tempList, value!!)
+        clickedPhotoIngredient.observe(activity, Observer { value ->
+            ingredientPhotoListAdapter.setList(tempList, value!!)
         })
     }
 
@@ -94,7 +94,7 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
     fun loadRecipe(id: Int, application: Application) {
         val repository = DrinkRepository(application)
         onRetrieveRecipeStart()
-        repository.getSingleDrinkById(id, loadingSingleDrinkCallBack = object : CallBack.LoadingSingleDrinkCallBack{
+        repository.getSingleDrinkById(id, loadingSingleDrinkCallBack = object : CallBack.LoadingSingleDrinkCallBack {
             override fun onLoad(drink: Drink) {
                 bind(drink)
                 onRetrieveRecipeStop()
@@ -133,16 +133,16 @@ class FullDrinkViewModel(val activity: FullDrinkActivity) : BaseViewModel() {
         }
     }
 
-    fun insertDrink( application: Application){
+    fun insertDrink(application: Application) {
         val repo = DrinkRepository(application)
-        Log.d("draxvel", "insert: "+currentDrink.strDrink)
+        Log.d("draxvel", "insert: " + currentDrink.strDrink)
         currentDrink.favorite = true
         repo.insert(currentDrink)
     }
 
     fun deleteDrink(application: Application) {
         val repo = DrinkRepository(application)
-        Log.d("draxvel", "delete: "+currentDrink.strDrink)
+        Log.d("draxvel", "delete: " + currentDrink.strDrink)
         repo.delete(currentDrink)
     }
 }

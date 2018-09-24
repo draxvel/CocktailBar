@@ -168,7 +168,7 @@ class DrinkRepository(val context: Context) : BaseRepositoryModel() {
                 .debounce(TIMEOUT_FOR_LOADING, TimeUnit.SECONDS)
                 .subscribe({ result ->
 
-                    while (counter< COUNT_OF_DRINKS_FOR_GETTING_RANDOM && COUNT_OF_DRINKS_FOR_GETTING_RANDOM<result.size){
+                    while (counter < COUNT_OF_DRINKS_FOR_GETTING_RANDOM && COUNT_OF_DRINKS_FOR_GETTING_RANDOM < result.size) {
 
                         val random = (0 until result.size).random()
 
