@@ -5,19 +5,21 @@ import android.support.v4.app.FragmentActivity
 import android.util.Log
 import android.view.View
 import com.tkachuk.cocktailbar.R
+import com.tkachuk.cocktailbar.data.database.CallBack
+import com.tkachuk.cocktailbar.data.repository.CategoryRepository
 import com.tkachuk.cocktailbar.ui.base.BaseViewModel
-import com.tkachuk.cocktailbar.model.Categories
+import com.tkachuk.cocktailbar.model.Category
 import com.tkachuk.cocktailbar.network.Api
 import com.tkachuk.cocktailbar.ui.main.IMainActivity
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class CategoryListViewModel(activity: FragmentActivity) : BaseViewModel() {
 
     @Inject
     lateinit var api: Api
+
+    private val repo = CategoryRepository(activity.applicationContext)
     private var subscription: Disposable? = null
     var categoryListAdapter: CategoryListAdapter = CategoryListAdapter(activity as IMainActivity)
 
@@ -33,22 +35,25 @@ class CategoryListViewModel(activity: FragmentActivity) : BaseViewModel() {
     }
 
     fun loadCategories() {
-        subscription = api.getCategoriesList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { onRetrieveCategoriesStart() }
-                .doOnTerminate { onRetrieveCategoriesFinish() }
-                .doOnError { onRetrieveDrinkError("Error") }
-                .subscribe(
-                        //Add result
-                        { result -> onRetrieveCategoriesSuccess(result) },
-                        { msg -> onRetrieveDrinkError(msg.localizedMessage.toString()) }
-                )
+        onRetrieveCategoriesStart()
+
+        repo.getCategories(loadCategoriesCallBack = object : CallBack.LoadCategoriesCallBack {
+
+            override fun onLoad(list: List<Category>) {
+                onRetrieveCategoriesSuccess(list)
+                onRetrieveCategoriesFinish()
+            }
+
+            override fun onError(msg: String) {
+                onRetrieveDrinkError(msg)
+                onRetrieveCategoriesFinish()
+            }
+
+        })
     }
 
     private fun onRetrieveCategoriesStart() {
         Log.d("draxvel", "onRetrieveCategoriesStart")
-
         errorMessage.value = null
         setVisible(true)
     }
@@ -59,9 +64,9 @@ class CategoryListViewModel(activity: FragmentActivity) : BaseViewModel() {
         setVisible(false)
     }
 
-    private fun onRetrieveCategoriesSuccess(result: Categories) {
+    private fun onRetrieveCategoriesSuccess(list: List<Category>) {
         Log.d("draxvel", "onRetrieveCategoriesSuccess")
-        categoryListAdapter.setList(result.drinks)
+        categoryListAdapter.setList(list)
     }
 
     private fun onRetrieveDrinkError(msg: String) {
