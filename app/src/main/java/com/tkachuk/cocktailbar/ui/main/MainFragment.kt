@@ -15,6 +15,7 @@ import android.view.*
 import com.bumptech.glide.Glide
 import com.tkachuk.cocktailbar.R
 import com.tkachuk.cocktailbar.data.repository.DrinkRepository
+import com.tkachuk.cocktailbar.data.repository.IngredientRepository
 import com.tkachuk.cocktailbar.databinding.FragmentMainBinding
 import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
 import com.tkachuk.cocktailbar.ui.fulldrink.FullDrinkActivity
@@ -49,7 +50,7 @@ class MainFragment : Fragment() {
         val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         binding?.drinkList?.layoutManager = linearLayoutManager
 
-        ingredientsListViewModel = ViewModelProviders.of(this).get(IngredientsListViewModel::class.java)
+        ingredientsListViewModel = IngredientsListViewModel(IngredientRepository(activity!!.applicationContext))
         ingredientsListViewModel.loadIngredients(true)
         ingredientsListViewModel.errorMessage.observe(this, Observer { errorMessage ->
             if (errorMessage != null) showError(errorMessage, ingredientsListViewModel.errorClickListener) else hideError()

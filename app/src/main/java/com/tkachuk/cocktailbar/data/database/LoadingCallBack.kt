@@ -2,7 +2,7 @@ package com.tkachuk.cocktailbar.data.database
 
 import com.tkachuk.cocktailbar.model.Category
 import com.tkachuk.cocktailbar.model.Drink
-import com.tkachuk.cocktailbar.model.Drinks
+import com.tkachuk.cocktailbar.model.Ingredient
 import io.reactivex.Observable
 
 interface CallBack {
@@ -29,5 +29,9 @@ interface CallBack {
 
     interface LoadCategoriesCallBack : BaseCallback {
         fun onLoad(list: List<Category>)
+    }
+
+    interface LoadIngredientsCallBack : BaseCallback {
+        fun onLoad(list: List<Ingredient>)
     }
 }

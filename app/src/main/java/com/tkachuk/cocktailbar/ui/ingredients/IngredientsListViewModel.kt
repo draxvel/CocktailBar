@@ -4,17 +4,16 @@ import android.arch.lifecycle.MutableLiveData
 import android.util.Log
 import android.view.View
 import com.tkachuk.cocktailbar.R
+import com.tkachuk.cocktailbar.data.database.CallBack
+import com.tkachuk.cocktailbar.data.repository.IngredientRepository
 import com.tkachuk.cocktailbar.ui.base.BaseViewModel
 import com.tkachuk.cocktailbar.model.Ingredient
-import com.tkachuk.cocktailbar.model.Ingredients
 import com.tkachuk.cocktailbar.network.Api
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
 
-class IngredientsListViewModel : BaseViewModel() {
+class IngredientsListViewModel(private val ingredientRepository: IngredientRepository) : BaseViewModel() {
     @Inject
     lateinit var api: Api
 
@@ -22,7 +21,7 @@ class IngredientsListViewModel : BaseViewModel() {
 
     val ingredientsListAdapter: IngredientsListAdapter = IngredientsListAdapter(this)
 
-    private var ingredientsList : List<Ingredient> = listOf()
+    private var ingredientsList: List<Ingredient> = listOf()
 
     var clickedIngredientName: MutableLiveData<String> = MutableLiveData()
 
@@ -37,52 +36,62 @@ class IngredientsListViewModel : BaseViewModel() {
     }
 
     fun loadIngredients(only5elements: Boolean) {
-        subscription = api.getIngredientsList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { onRetrievePostListStart() }
-                .doOnTerminate { onRetrievePostListFinish() }
-                .subscribe(
-                        // Add result
-                        { result ->
-                            if(only5elements){
-                                val tempList = getRandomIngredients(result, 5).toMutableList()
-                                tempList.add(Ingredient("SEARCH MORE"))
-                                onRetrievePostListSuccess(Ingredients(tempList))
-                            }else onRetrievePostListSuccess(result) },
-                        { msg -> onRetrievePostListError() }
-                )
+
+        onRetrieveIngredientsListStart()
+
+        ingredientRepository.loadIngredients(loadIngredientsCallBack = object : CallBack.LoadIngredientsCallBack {
+
+            override fun onLoad(list: List<Ingredient>) {
+
+                Log.d("draxvel", "loadIngredients onLoad ${list.toString()}")
+
+                if (only5elements) {
+                    val tempList = getRandomIngredients(list, 5).toMutableList()
+                    tempList.add(Ingredient("SEARCH MORE"))
+                    onRetrieveIngredientsListSuccess(tempList.toMutableList())
+                } else onRetrieveIngredientsListSuccess(list.toMutableList())
+
+                onRetrieveIngredientsListFinish()
+            }
+
+            override fun onError(msg: String) {
+                Log.d("draxvel", msg)
+                onRetrieveIngredientsListError()
+                onRetrieveIngredientsListFinish()
+            }
+
+        })
     }
 
-    private fun onRetrievePostListStart() {
+    private fun onRetrieveIngredientsListStart() {
         loadingVisibility.value = View.VISIBLE
         errorMessage.value = null
     }
 
-    private fun onRetrievePostListFinish() {
+    private fun onRetrieveIngredientsListFinish() {
         loadingVisibility.value = View.GONE
     }
 
-    private fun onRetrievePostListSuccess(result: Ingredients) {
-        Log.d("draxvel", "onRetrievePostListSuccess - "+result.drinks.toString())
-        val sortedList = result.drinks.sortedBy { it.strIngredient1 }
+    private fun onRetrieveIngredientsListSuccess(list: MutableList<Ingredient>) {
+        Log.d("draxvel", "onRetrieveIngredientsListSuccess - " + list.toString())
+        val sortedList = list.sortedBy { it.strIngredient1 }
         updateAdapter(sortedList)
         ingredientsList = sortedList
         loadingVisibility.value = View.GONE
     }
 
-    private fun onRetrievePostListError() {
+    private fun onRetrieveIngredientsListError() {
         errorMessage.value = R.string.loading_error
         loadingVisibility.value = View.GONE
     }
 
-    private fun getRandomIngredients(result: Ingredients, count: Int = result.drinks.size): List<Ingredient> {
-        val mutableTempList = result.drinks.toMutableList()
+    private fun getRandomIngredients(list: List<Ingredient>, count: Int = list.size): List<Ingredient> {
+        val mutableTempList = list.toMutableList()
         mutableTempList.shuffle(Random(System.currentTimeMillis()))
         return mutableTempList.toList().takeLast(count)
     }
 
-    private fun updateAdapter(list: List<Ingredient>){
+    private fun updateAdapter(list: List<Ingredient>) {
         Log.d("draxvel", list.toString())
         ingredientsListAdapter.updateList(list)
     }
