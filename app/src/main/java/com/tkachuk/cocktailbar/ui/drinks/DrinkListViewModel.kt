@@ -44,6 +44,7 @@ class DrinkListViewModel(private val drinkRepository: DrinkRepository) : BaseVie
 
             override fun onError(msg: String) {
                 onRetrieveDrinkError()
+                onRetrieveFinish()
             }
         })
     }
@@ -61,6 +62,7 @@ class DrinkListViewModel(private val drinkRepository: DrinkRepository) : BaseVie
 
             override fun onError(msg: String) {
                 onSearchDrinkError()
+                onRetrieveFinish()
             }
         })
     }

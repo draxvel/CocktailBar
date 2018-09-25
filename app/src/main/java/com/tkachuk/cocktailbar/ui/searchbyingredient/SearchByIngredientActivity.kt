@@ -14,6 +14,7 @@ import android.view.Menu
 import android.view.View
 import com.tkachuk.cocktailbar.R
 import com.tkachuk.cocktailbar.data.repository.DrinkRepository
+import com.tkachuk.cocktailbar.data.repository.IngredientRepository
 import com.tkachuk.cocktailbar.databinding.ActivitySearchByIngredientBinding
 import com.tkachuk.cocktailbar.ui.drinks.DrinkListViewModel
 import com.tkachuk.cocktailbar.ui.fulldrink.FullDrinkActivity
@@ -42,10 +43,10 @@ class SearchByIngredientActivity : AppCompatActivity() {
         }
 
         binding.drinkList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        binding.ingredientsListSearch.layoutManager =  GridLayoutManager(this, 3)
+        binding.ingredientsListSearch.layoutManager = GridLayoutManager(this, 3)
 
         drinkListViewModel = DrinkListViewModel(DrinkRepository(applicationContext))
-        ingredientListViewModel = ViewModelProviders.of(this).get(IngredientsListViewModel::class.java)
+        ingredientListViewModel = IngredientsListViewModel(IngredientRepository(this.applicationContext))
 
         drinkListViewModel.errorMessage.observe(this, Observer { errorMessage ->
             if (errorMessage != null) showError(errorMessage, drinkListViewModel.errorClickListener)
@@ -70,7 +71,7 @@ class SearchByIngredientActivity : AppCompatActivity() {
 
         ingredientListViewModel.clickedIngredientName.observe(this, Observer { clickedIngredientName ->
             Log.d("draxvel", "clickedIngredientName")
-           searchByIngredient(clickedIngredientName!!)
+            searchByIngredient(clickedIngredientName!!)
         })
 
         binding.drinkListViewModel = drinkListViewModel
