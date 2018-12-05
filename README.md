@@ -6,15 +6,15 @@ App for search cocktail recipes that helps you find the cocktail by name, ingred
 ## Screenshots:
 Main screen | Navigation view | Ingredients
 -------------|----------------- | -------------
-[alt text](screenshots/main_screen.jpg)  | ![alt text](screenshots/navigation_view.jpg) | ![alt text](screenshots/ingredients.jpg)
+[alt text](screenshots/main_screen.jpeg)  | ![alt text](screenshots/navigation_view.jpeg) | ![alt text](screenshots/ingredients.jpeg)
 
 Categories | Category | Favorite
 -------------|----------------- | -------------
-[alt text](screenshots/categories.jpg)  | ![alt text](screenshots/category.jpg) | ![alt text](screenshots/favorite.jpg)
+[alt text](screenshots/categories.jpeg)  | ![alt text](screenshots/category.jpeg) | ![alt text](screenshots/favorite.jpeg)
 
 Drink |
 -------------|
-[alt text](screenshots/drink.jpg)
+[alt text](screenshots/drink.jpeg)
 
 ## License
 This application is Free Software ([GNU General Public License](https://www.gnu.org/licenses/gpl.html)).
